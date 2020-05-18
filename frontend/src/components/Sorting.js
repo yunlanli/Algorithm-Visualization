@@ -1,6 +1,7 @@
 import React from 'react';
 import { initializeCanvaArray } from '../scripts/initialization';
-import moveWrapper from '../scripts/movement';
+// import { moveWrapper } from '../scripts/movement';
+import { quickSort } from '../scripts/quickSort';
 
 export default class Sorting extends React.Component {
     constructor(props){
@@ -19,7 +20,7 @@ export default class Sorting extends React.Component {
     handleInput(e){
         e.preventDefault();
         this.setState({textField: e.target.value});
-        // console.log(this.state.data);
+        console.log(this.state.data);
     }
 
     initialize(){
@@ -32,11 +33,7 @@ export default class Sorting extends React.Component {
 
     moveElement(){
         const canvas = this.canvas.current;
-        const el = this.state.data[0];
-        const el2 = this.state.data[10];
-
-        moveWrapper(canvas,this.state.data,0,10,el2.x);
-        moveWrapper(canvas,this.state.data,10,10,el.x);
+        quickSort(canvas,this.state.data,1);
     }
 
     render(){

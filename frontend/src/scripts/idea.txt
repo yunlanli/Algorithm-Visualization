@@ -1,0 +1,36 @@
+排序动画实现的想法探索：
+
+canvas动画限制：
+    1. 动画，即多张图片的快速播放。有window.requestAnimationFrame(fn)实现。
+    2. 在画新的一帧前，需要清空画板，重新绘制。
+    3. 可以使用多层画板，通过z-index指定涂层的覆盖顺序。
+
+实现2个元素互换位置动画的初步想法：
+除了需要互换位置的两个元素以外，其他元素保持静止。
+    - 实现：每次触发动画时，只清除移动元素。所以实现该动画的方程需要每个元素的（x,y,width,height,xTarget)
+        - x: 有元素在array中的位置*totalWidth
+        - y: canvas.width - height;
+        - width：可以设定一个global variable，每个元素的width都相同
+        - height：可以编写一个calculateHeight（），将元素值传入函数获得height
+        - xTarget: 互换元素的x
+两个元素的互换位置可以分解成两个元素的直线移动。移动速度相同，移动方向相反。
+当两个元素达到目标位置时（也就是对方的初始位置），完成。通过window.cancelAnimationFrame(frameName)实现。
+因为两个元素所需移动的距离相同，即宽度+间隔宽度，所以当一个元素完成移动时，另一个元素也相应完成移动。只需要检查任一移动元素的绝对位置。
+
+关于如何将元素数值的文本一同移动，后期考虑。
+
+数组中储存对象而不仅仅是数值。以下是一个模板。
+var element = {
+    value,
+    x:
+    y:
+    width:
+    height:
+    color:
+}
+
+Global Variable:
+var randomArray = [];
+var WIDTH;
+var velocity;
+
