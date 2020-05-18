@@ -25,7 +25,7 @@ export default class Sorting extends React.Component {
 
     initialize(){
         const canvas = this.canvas.current;
-        var dataArray = initializeCanvaArray(15,canvas);
+        var dataArray = initializeCanvaArray(20,canvas);
 
         // console.log(dataArray);
         this.setState({data: dataArray});
@@ -33,7 +33,7 @@ export default class Sorting extends React.Component {
 
     moveElement(){
         const canvas = this.canvas.current;
-        quickSort(canvas,this.state.data,1);
+        quickSort(canvas,this.state.data,100);
     }
 
     render(){

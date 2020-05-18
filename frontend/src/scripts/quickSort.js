@@ -1,9 +1,16 @@
 import * as Animation from "./movement"
+import { drawArray } from './initialization';
 
 function quickSort(canvas,array,velocity){
     // calls the helper method
     quickSortHelper(0,array.length-1);
-    console.log(array);
+
+    for (let el of array)
+        console.log(el);
+    console.log(performance.now());
+    drawArray(array,canvas);
+    console.log(performance.now());
+    // console.log(array);
     
     // helper method that sorts the input array
     // and draws every step on the canvas
@@ -82,19 +89,19 @@ function quickSort(canvas,array,velocity){
             // while pointer i hasn't encountered an item bigger than the pivot
             while (array[i].value - pivot <= 0){ 
                 i++;
-                Animation.highlight(canvas,array,[array[i]],'rgba(0,0,200,0.8)',false);
+                // Animation.highlight(canvas,array,[array[i]],'rgba(0,0,200,0.8)',false);
             }
             // mark the element in the wrong partition as red
-            Animation.highlight(canvas,array,[array[i]],'rgba(200,0,0,0.8)',true);
+            // Animation.highlight(canvas,array,[array[i]],'rgba(200,0,0,0.8)',true);
 
 
             // while pointer j hasn't encountered an item smaller than the pivot
             while (array[j].value - pivot >= 0) { 
                 j--; 
-                Animation.highlight(canvas,array,[array[j]],'rgba(0,0,200,0.8)',false);
+                // Animation.highlight(canvas,array,[array[j]],'rgba(0,0,200,0.8)',false);
             }
             // mark the element in the wrong partition as red
-            Animation.highlight(canvas,array,[array[j]],'rgba(200,0,0,0.8)',true);
+            // Animation.highlight(canvas,array,[array[j]],'rgba(200,0,0,0.8)',true);
 
             // swap i,j elements if i,j haven't crossed
             if (i < j){

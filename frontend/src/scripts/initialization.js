@@ -1,3 +1,5 @@
+import { color } from '../styles/GlobalStyles';
+
 /* 
 * Initializes a canvas with a visualization of a given size of
 * array of random integers
@@ -10,7 +12,7 @@ export function initializeCanvaArray(size,canvas){
 
     // prepare array for drawing
     var array = createRandomArray(size);
-    transformArrayFormat(array,canvas.width,canvas.height,"rgba(0,0,200,0.3");
+    transformArrayFormat(array,canvas.width,canvas.height,color.default);
 
     // draw array on the canvas node
     drawArray(array,canvas);
@@ -25,18 +27,39 @@ export function initializeCanvaArray(size,canvas){
 * @param array: the array to draw on the canvas element
 */
 export function drawArray(array,canvas) {
+  // for (let current of array)
+  //   console.log(current.value);
+
   // var canvas = document.getElementById("canvas");
+  var raf;
+  var count = 0;
+
   if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
+    draw();
+    // window.cancelAnimationFrame(raf);
 
-    // iterate over the elements in the random array
-    for (let key in array){
-      const current = array[key]
-      
-      // draw rectangle
-      ctx.fillStyle = current.color;
-      ctx.fillRect(current.x,current.y,current.width,current.height);
+    function draw(){
+      count++;
+
+      // clear canvas
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // iterate over the elements in the random array
+      for (let current of array){
+        // draw rectangle
+        ctx.fillStyle = current.color;
+        ctx.fillRect(current.x[count],current.y,current.width,current.height);
+        --current.numFrames;
+      }
+
+      if (array[0].numFrames > 0)
+        raf = window.requestAnimationFrame(draw);
     }
+
+    // all frames drawn, preserve the last one of x only for later use
+      // for (let element of array)
+      //   element.x = [element.x[numFrames]];
+
   }
 }
 
@@ -47,7 +70,11 @@ export function drawArray(array,canvas) {
 */
 function createRandomArray(size){
   return Array(size).fill().map(() => {
-    return {value: Math.floor(Math.random()*size*10)}
+    return {
+      value: Math.floor(Math.random()*size*10)+1,
+      x: [0],
+      numFrames: 1
+    }
   });
 }
 
@@ -68,8 +95,9 @@ function transformArrayFormat(array, width, height, color){
 
     current.width = WIDTH - SPACE;
     current.height = getHeight(current.value);
-    current.x = key*WIDTH + SPACE;
+    current.x.push(key*WIDTH + SPACE);
     current.y = height - current.height;
-    current.color = color;   
+    current.color = color;
+    current.highlight = false;   
   }
 }

@@ -34,3 +34,10 @@ var randomArray = [];
 var WIDTH;
 var velocity;
 
+使element.x成为一个数组，存储element x坐标的变化史。
+这样的话，我们在执行quicksort时，只需要不断地更新element的历史坐标。
+问题1： 如何让highlight 持续一段时间？
+    使用一个highlight属性，当为真时，重新渲染一定次数。
+问题2： element.x会占很大的空间，如何减小浏览器的压力？
+    当x的值到达一定数量时，执行动画，清空x
+
