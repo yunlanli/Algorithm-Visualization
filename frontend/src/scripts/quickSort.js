@@ -1,16 +1,18 @@
 import * as Animation from "./movement"
 import { drawArray } from './initialization';
 
+function show(array){
+    console.log("Array: ");
+    for (let el of array)
+        console.log(el.numFrames);
+
+    console.log("\n");
+}
+
 function quickSort(canvas,array,velocity){
     // calls the helper method
     quickSortHelper(0,array.length-1);
-
-    for (let el of array)
-        console.log(el);
-    console.log(performance.now());
-    drawArray(array,canvas);
-    console.log(performance.now());
-    // console.log(array);
+    drawArray(array,canvas,1);
     
     // helper method that sorts the input array
     // and draws every step on the canvas
@@ -33,20 +35,14 @@ function quickSort(canvas,array,velocity){
     }
 
     function insertionSort(begin,end){
-        var tmp,j;
+        var j;
 
         for (let i=begin+1; i<= end; i++){
-            tmp = array[i];
-            for (j=i; j>0 && ( tmp.value - array[j-1].value<0 ); j--){
-                console.log("selected: " + tmp.value + "\t compared against: " + array[j-1].value);
+            for (j=i; j>0 && ( array[j].value - array[j-1].value < 0 ); j--){
                 // Animation will show that j and j-1 element swap positions
-                Animation.swap(canvas,array,tmp,array[j-1],velocity);
-
-                // under the hood, we slide previous element to the right instead 
-                array[j] = array[j-1];
+                Animation.swap(canvas,array,array[j],array[j-1],velocity);
+                swap(j,j-1)
             }
-
-            array[j] = tmp;
         }
     }
 

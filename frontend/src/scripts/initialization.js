@@ -15,7 +15,7 @@ export function initializeCanvaArray(size,canvas){
     transformArrayFormat(array,canvas.width,canvas.height,color.default);
 
     // draw array on the canvas node
-    drawArray(array,canvas);
+    drawArray(array,canvas,0);
 
     return array;
 }
@@ -26,13 +26,13 @@ export function initializeCanvaArray(size,canvas){
 * for each element in the input array
 * @param array: the array to draw on the canvas element
 */
-export function drawArray(array,canvas) {
+export function drawArray(array,canvas,offset) {
   // for (let current of array)
   //   console.log(current.value);
 
   // var canvas = document.getElementById("canvas");
   var raf;
-  var count = 0;
+  var count = offset;
 
   if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
@@ -40,6 +40,9 @@ export function drawArray(array,canvas) {
     // window.cancelAnimationFrame(raf);
 
     function draw(){
+      if (array[0].numFrames === 0)
+        return;
+  
       count++;
 
       // clear canvas
