@@ -1,14 +1,6 @@
 import * as Animation from "./movement"
 import { drawArray } from './initialization';
 
-function show(array){
-    console.log("Array: ");
-    for (let el of array)
-        console.log(el.numFrames);
-
-    console.log("\n");
-}
-
 function quickSort(canvas,array,velocity){
     // calls the helper method
     quickSortHelper(0,array.length-1);
@@ -26,11 +18,11 @@ function quickSort(canvas,array,velocity){
             medianOfThree(begin,end);
 
             // partition the array into 3 parts
-            var leftBoundary = partition(begin,end);
+            var pivot = partition(begin,end);
 
             // recursively quicksort the partitions
-            quickSortHelper(begin,leftBoundary);
-            quickSortHelper(leftBoundary+2,end);
+            quickSortHelper(begin,pivot-1);
+            quickSortHelper(pivot+1,end);
         }
     }
 
@@ -82,9 +74,10 @@ function quickSort(canvas,array,velocity){
         var pivot = array[end-1].value;
 
         // keep partitioning while the 2 pointers have not crossed
-        while(i < j){
+        while(i <= j){
             // while pointer i hasn't encountered an item bigger than the pivot
-            while (array[i].value - pivot <= 0){ 
+            // DON'T USE '<= '! It runs the risk of letting i go beyond pivot
+            while (array[i].value - pivot < 0){ 
                 i++;
                 // Animation.highlight(canvas,array,[array[i]],'rgba(0,0,200,0.8)',false);
             }
@@ -93,7 +86,7 @@ function quickSort(canvas,array,velocity){
 
 
             // while pointer j hasn't encountered an item smaller than the pivot
-            while (array[j].value - pivot >= 0) { 
+            while (array[j].value - pivot > 0) { 
                 j--; 
                 // Animation.highlight(canvas,array,[array[j]],'rgba(0,0,200,0.8)',false);
             }
@@ -104,6 +97,7 @@ function quickSort(canvas,array,velocity){
             if (i < j){
                 Animation.swap(canvas,array,array[i],array[j],velocity);
                 swap(i,j);
+                console.log("swap " + i + ", " + j);
             }
         }
 
@@ -111,8 +105,8 @@ function quickSort(canvas,array,velocity){
         Animation.swap(canvas,array,array[i],array[end-1],velocity);
         swap(i,end-1);
 
-        // return the position of the last element of the left partition
-        return j;
+        // return the position of the pivot
+        return i;
     }
 
     function swap(pos1,pos2){
