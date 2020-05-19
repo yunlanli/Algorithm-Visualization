@@ -7,7 +7,7 @@ export default class Sorting extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            textField: "Create an array to sort",
+            textField: 0,
             data: [],
         }
         this.canvas = React.createRef();
@@ -18,14 +18,14 @@ export default class Sorting extends React.Component {
     }
 
     handleInput(e){
-        e.preventDefault();
         this.setState({textField: e.target.value});
-        console.log(this.state.data);
+        e.preventDefault();
     }
 
     initialize(){
         const canvas = this.canvas.current;
-        var dataArray = initializeCanvaArray(20,canvas);
+        const arraySize = this.state.textField;
+        var dataArray = initializeCanvaArray(3,canvas);
 
         // console.log(dataArray);
         this.setState({data: dataArray});
@@ -33,18 +33,18 @@ export default class Sorting extends React.Component {
 
     moveElement(){
         const canvas = this.canvas.current;
-        quickSort(canvas,this.state.data,100);
+        quickSort(canvas,this.state.data,400);
     }
 
     render(){
         return(
             <div>
-                <input type="text" placeholder="Enter Something" onChange={this.handleInput}/>
+                <input type="number" placeholder="Enter Something" onChange={this.handleInput}/>
                 
                 <canvas width='700' height='700' ref={this.canvas}/>
 
                 <button type="button" onClick={this.initialize}>
-                        {this.state.textField}
+                        Create a random array
                 </button>
 
                 <button type="button" onClick={this.moveElement}>Move</button>

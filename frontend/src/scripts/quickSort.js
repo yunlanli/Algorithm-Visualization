@@ -37,7 +37,8 @@ function quickSort(canvas,array,velocity){
 
         for (let i=begin+1; i<= end; i++){
             tmp = array[i];
-            for (j=i; j>0 && array[j].value - array[j-1].value<0; j--){
+            for (j=i; j>0 && ( tmp.value - array[j-1].value<0 ); j--){
+                console.log("selected: " + tmp.value + "\t compared against: " + array[j-1].value);
                 // Animation will show that j and j-1 element swap positions
                 Animation.swap(canvas,array,tmp,array[j-1],velocity);
 

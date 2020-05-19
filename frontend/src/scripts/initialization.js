@@ -6,7 +6,7 @@ import { color } from '../styles/GlobalStyles';
 * @param size: the size of the array of random integer
 */
 export function initializeCanvaArray(size,canvas){
-
+    console.log(size);
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
@@ -80,8 +80,11 @@ function createRandomArray(size){
 
 function transformArrayFormat(array, width, height, color){
   // width of each element based on array size and canvas width
+  // Ensure that both attributes are type integer
   const WIDTH = Math.floor(width/array.length);
-  const SPACE = 0.1*WIDTH;
+  var SPACE = Math.floor(0.1*WIDTH);
+  if (SPACE === 0)
+    SPACE = 1;
   
   function getHeight(val){
     var largest = 10*array.length;

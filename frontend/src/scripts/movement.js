@@ -5,12 +5,12 @@ function swapWrapper(canvas, array, element1, element2,velocity){
     var frames = element1.numFrames+1;
     var xTarget1 = element2.x[frames];
     var xTarget2 = element1.x[frames];
-    console.log(xTarget1 + " " + xTarget2);
+    var step = Math.floor(velocity * 0.1) + 1;
     swap();
 
     function swap(){
         while (element1.x[element1.numFrames+1] !== xTarget1){
-            console.log(element1.x[element1.numFrames+1]);
+            // console.log(element1.x[element1.numFrames+1] + "targert: " + xTarget1);
             // move element 1 and element 2
             moveXY(element1, element2, xTarget1, xTarget2);
         }
@@ -25,20 +25,14 @@ function swapWrapper(canvas, array, element1, element2,velocity){
     }
 
     function moveXY(element1,element2, xTarget1, xTarget2){
-        console.log("hi");
-            // !! need to update the x list of all element
+            //update the x list of all elements
             for (let current of array){
                 if (JSON.stringify(current) === JSON.stringify(element1)){
-                    console.log("x1Current: " + element1.x[element1.numFrames] + ", x1Target: " + xTarget1+"\n\n");
                     moveX(element1, xTarget1);
-                    // console.log("element1: " + element1.x);
                 }else if(JSON.stringify(current) === JSON.stringify(element2)){
-                    console.log("x2Current: " + element2.x[element2.numFrames] + ", x2Target: " + xTarget2 + "\n\n");
                     moveX(element2, xTarget2);
-                    // console.log("element2: " + element2.x);
                 }else{
-                    current.x.push(current.x[current.numFrames++]);
-                    // console.log("Other elements: " + current.x);
+                    current.x.push(current.x[++current.numFrames]);
                 }
                     
             }
@@ -48,32 +42,21 @@ function swapWrapper(canvas, array, element1, element2,velocity){
     function moveX(element,xTarget){
         element.color = color.selected;
         
-        console.log("element: " + element.value);
-        var lastX = element.x[element.numFrames+1];
-        console.log("lastX: " + lastX);
+        // update #frames and retrive last x position
+        var lastX = element.x[++element.numFrames];
         // push the new x coordinate to element.x
-        if (Math.abs(xTarget - lastX) <= velocity*0.1){
-            console.log("Last Step!");
+        if (Math.abs(xTarget - lastX) <= step){
             element.x.push(xTarget);
         }else if (xTarget < lastX){
-            console.log("Move Left.  nextX: " + (lastX - velocity*0.1));
-            element.x.push(lastX - velocity*0.1);
-            console.log(element.x);
+            element.x.push(lastX - step);
         }else if (xTarget > lastX){
-            console.log("Move Right.  nextX: " + (lastX + velocity*0.1));
-            element.x.push(lastX + velocity*0.1); 
-            console.log(element.x);
+            element.x.push(lastX + step);
         }
-            
-        
-        // update element's numFrames attribute
-        element.numFrames++;
-        // console.log("Frames after update: " + element.numFrames);
     }
 }
 
 function highlightWrapper(canvas, array, elements, color, keepColor){
-    if (elements.length == 0){
+    if (elements.length === 0){
         return;
     }
 
