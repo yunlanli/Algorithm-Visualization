@@ -1,7 +1,7 @@
 const color = {
-    default: 'rgba(181,226,250,0.5)',
+    default: 'rgba(181,226,250,0.7)',
+    wait: 'rgba(181,226,250,0.2)',
     selected: '#FFDAC1',
-    swap: '#C7CEEA',
     pivot: '#FF9AA2'
 }
     

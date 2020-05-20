@@ -5,6 +5,9 @@ import { color } from '../styles/GlobalStyles';
 function quickSort(canvas,array,velocity){
     // calls the helper method
     quickSortHelper(0,array.length-1);
+    // all elements sorted, restore color
+    Animation.restoreColor(array, array);
+
     drawArray(array,canvas,1);
     
     // helper method that sorts the input array
@@ -21,7 +24,12 @@ function quickSort(canvas,array,velocity){
             var pivot = partition(begin,end);
 
             // recursively quicksort the partitions
+            // shade the part that is not going to be sorted next
+            Animation.shade(array, array.slice(pivot, end+1));
+            Animation.restoreColor(array, array.slice(begin, pivot));
             quickSortHelper(begin,pivot-1);
+            Animation.shade(array, array.slice(begin, pivot+1));
+            Animation.restoreColor(array, array.slice(pivot+1, end+1));
             quickSortHelper(pivot+1,end);
         }
     }
@@ -34,16 +42,19 @@ function quickSort(canvas,array,velocity){
                 // Animation will show that j and j-1 element swap positions
                 Animation.highlight(array, [array[j-1],array[j]], color.selected);
                 Animation.swap(array, array[j-1], array[j], velocity);
-                Animation.setColor(array, [array[j-1],array[j]], color.default);
-                swap(j,j-1)
+                Animation.restoreColor(array, [array[j-1],array[j]]);
+                swap(j-1,j);
             }
             
             // show the last comparison that failed
             if ( j > 0 ){
                 Animation.highlight(array, [array[j-1],array[j]], color.selected);
-                Animation.setColor(array, [array[j-1],array[j]], color.default);
+                Animation.restoreColor(array, [array[j-1],array[j]]);
             } 
         }
+
+        // sub-array sorted, shade sub-array
+        Animation.shade(array, array.slice(begin, end+1));
     }
 
     // high-level animation that displays a single comparison
@@ -58,9 +69,7 @@ function quickSort(canvas,array,velocity){
     }
 
     function medianOfThree(begin,end){
-        console.log("Median of 3: begin: " + begin +", end: " + end);
         var mid = Math.floor(begin + (end - begin)/2);
-        console.log("begin: " + begin + ",mid: " + mid + ", end: " + end);
     
         // select pivot
         compare(begin, mid);
@@ -79,43 +88,44 @@ function quickSort(canvas,array,velocity){
         var j = end - 2;
         var pivot = array[end-1].value;
 
+        // highlight i,jth element
+        Animation.highlight(array, [array[i], array[j]], color.selected);
+
         // keep partitioning while the 2 pointers have not crossed
         while(i <= j){
             // while pointer i hasn't encountered an item bigger than the pivot
             // DON'T USE '<= '! It runs the risk of letting i go beyond pivot
             while (array[i].value - pivot < 0){ 
-                i++;
-                Animation.highlight(array,[array[i]]);
-                Animation.setColor(array,[array[i]], color.default);
+                if (i !== j)
+                    Animation.restoreColor(array, [array[i]]);
+                Animation.highlight(array, [array[++i]], color.selected);
+                
             }
-            // mark the element in the wrong partition as red
-            Animation.highlight(array,[array[i]],color.selected);
-
 
             // while pointer j hasn't encountered an item smaller than the pivot
             while (array[j].value - pivot > 0) { 
-                j--; 
-                Animation.highlight(array,[array[j]],false);
-                Animation.setColor(array,[array[j]], color.default);
+                if (j !== i)
+                    Animation.restoreColor(array,[array[j]]); 
+                Animation.highlight(array, [array[--j]], color.selected);
+                
             }
-            // mark the element in the wrong partition as red
-            Animation.highlight(array,[array[j]],color.selected);
 
             // swap i,j elements if i,j haven't crossed
             if (i < j){
                 Animation.swap(array,array[i],array[j],velocity);
                 swap(i,j);
-            }
-
-            // restore the color of the pointed elements
-            Animation.setColor(array, [array[i],array[j]], color.default);
+            }   
         }
-
+        
+        // restore the color of the pointed elements
+        Animation.restoreColor(array, [array[i],array[j]]);
+        
         // move the pivot in between the 2 partitions, i.e after j, before i
         Animation.swap(array,array[i],array[end-1],velocity);
         swap(i,end-1);
+
         // Restore the color of the pivot
-        Animation.setColor(array, [array[i]], color.default);
+        Animation.restoreColor(array, [array[i]]);
 
         // return the position of the pivot
         return i;

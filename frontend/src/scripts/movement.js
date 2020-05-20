@@ -66,12 +66,20 @@ function setColor(array, elements, color){
     }
 }
 
+function restoreColor(array, elements){
+    setColor(array, elements, color.default);
+}
+
+function shade(array, elements){
+    setColor(array, elements, color.wait);
+}
+
 function highlight(array, elements, color){
-    const FRAMES = 60;
+    const FRAMES = 1;
     
     for (let i = 0; i < FRAMES; i++){
         setColor(array,elements,color);
     }
 }
 
-export { swapWrapper as swap, highlight, setColor };
+export { swapWrapper as swap, highlight, setColor, restoreColor, shade };

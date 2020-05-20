@@ -23,6 +23,9 @@ export default class Sorting extends React.Component {
     }
 
     initialize(){
+        // empty previous data
+        this.setState({data: []});
+
         const canvas = this.canvas.current;
         // Transform (string) length to a base 10 number
         const arraySize = parseInt(this.state.length, 10);
@@ -34,7 +37,7 @@ export default class Sorting extends React.Component {
 
     moveElement(){
         const canvas = this.canvas.current;
-        quickSort(canvas,this.state.data,20);
+        quickSort(canvas,this.state.data,2000);
     }
 
     render(){
