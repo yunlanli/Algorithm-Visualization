@@ -18,7 +18,7 @@ export default class Sorting extends React.Component {
     }
 
     handleInput(e){
-        this.setState({textField: e.target.value});
+        this.setState({length: e.target.value});
         e.preventDefault();
     }
 

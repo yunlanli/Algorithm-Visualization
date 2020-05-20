@@ -1,7 +1,6 @@
 import { color } from '../styles/GlobalStyles';
-import { drawArray } from './initialization';
 
-function swapWrapper(canvas, array, element1, element2,velocity){
+function swapWrapper(array, element1, element2,velocity){
     var frames = element1.numFrames+1;
     var xTarget1 = element2.x[frames];
     var xTarget2 = element1.x[frames];
@@ -10,38 +9,31 @@ function swapWrapper(canvas, array, element1, element2,velocity){
 
     function swap(){
         while (element1.x[element1.numFrames+1] !== xTarget1){
-            // console.log(element1.x[element1.numFrames+1] + "targert: " + xTarget1);
             // move element 1 and element 2
             moveXY(element1, element2, xTarget1, xTarget2);
         }
-
-        // revert the color of the 2 elements back to the original color
-        element1.color = color.default;
-        element2.color = color.default;
-
-        // draw array if more than 100 Frames
-        // if (element1.numFrames >= 100)
-        //     drawArray(array,canvas);
     }
 
     function moveXY(element1,element2, xTarget1, xTarget2){
-            //update the x list of all elements
-            for (let current of array){
-                if (JSON.stringify(current) === JSON.stringify(element1)){
-                    moveX(element1, xTarget1);
-                }else if(JSON.stringify(current) === JSON.stringify(element2)){
-                    moveX(element2, xTarget2);
-                }else{
-                    current.x.push(current.x[++current.numFrames]);
-                }
-                    
+        var lastColorIndex = element1.numFrames;
+
+        //update the x list of all elements
+        for (let current of array){
+            if (current.id === element1.id){
+                moveX(element1, xTarget1);
+            }else if(current.id === element2.id){
+                moveX(element2, xTarget2);
+            }else{
+                current.x.push(current.x[++current.numFrames]);                   
             }
+
+            // update color list
+            current.color.push(current.color[lastColorIndex]);                
+        }
  
     }
 
     function moveX(element,xTarget){
-        element.color = color.selected;
-        
         // update #frames and retrive last x position
         var lastX = element.x[++element.numFrames];
         // push the new x coordinate to element.x
@@ -55,21 +47,31 @@ function swapWrapper(canvas, array, element1, element2,velocity){
     }
 }
 
-function highlightWrapper(canvas, array, elements, color, keepColor){
-    if (elements.length === 0){
-        return;
-    }
+function setColor(array, elements, color){
+    // extract id for element comparison purposes later
+    const ids = elements.map(el => el.id);
+    const lastFrame = array[0].numFrames;
 
-    var ctx = canvas.getContext('2d');
-    highlight();
-
-    function highlight(){
-        // update element attributes
-        for (var el of elements){
-            el.color = color.compare;
-            el.highlight = true;
+    // update color and x list for each element
+    for (let el of array){
+        // set color for input elements
+        if (ids.includes(el.id)){
+            el.color.push(color);
+        }else{
+            el.color.push(el.color[lastFrame]);
         }
+
+        // concatenate last x coord and update numFrames
+        el.x.push(el.x[++el.numFrames])
     }
 }
 
-export { swapWrapper as swap, highlightWrapper as highlight };
+function highlight(array, elements, color){
+    const FRAMES = 60;
+    
+    for (let i = 0; i < FRAMES; i++){
+        setColor(array,elements,color);
+    }
+}
+
+export { swapWrapper as swap, highlight, setColor };

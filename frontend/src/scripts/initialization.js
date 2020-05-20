@@ -6,7 +6,6 @@ import { color } from '../styles/GlobalStyles';
 * @param size: the size of the array of random integer
 */
 export function initializeCanvaArray(size,canvas){
-    console.log(size);
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
@@ -27,10 +26,6 @@ export function initializeCanvaArray(size,canvas){
 * @param array: the array to draw on the canvas element
 */
 export function drawArray(array,canvas,offset) {
-  // for (let current of array)
-  //   console.log(current.value);
-
-  // var canvas = document.getElementById("canvas");
   var raf;
   var count = offset;
 
@@ -50,7 +45,7 @@ export function drawArray(array,canvas,offset) {
       // iterate over the elements in the random array
       for (let current of array){
         // draw rectangle
-        ctx.fillStyle = current.color;
+        ctx.fillStyle = current.color[count-1];
         ctx.fillRect(current.x[count],current.y,current.width,current.height);
         --current.numFrames;
       }
@@ -58,11 +53,6 @@ export function drawArray(array,canvas,offset) {
       if (array[0].numFrames > 0)
         raf = window.requestAnimationFrame(draw);
     }
-
-    // all frames drawn, preserve the last one of x only for later use
-      // for (let element of array)
-      //   element.x = [element.x[numFrames]];
-
   }
 }
 
@@ -99,11 +89,11 @@ function transformArrayFormat(array, width, height, color){
   for (let key in array){
     let current = array[key];
 
+    current.id = key; // unique id for each element, used for identification
     current.width = WIDTH - SPACE;
     current.height = getHeight(current.value);
     current.x.push(key*WIDTH + SPACE);
     current.y = height - current.height;
-    current.color = color;
-    current.highlight = false;   
+    current.color = [color];
   }
 }

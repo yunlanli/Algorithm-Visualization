@@ -27,6 +27,8 @@ var element = {
     width:
     height:
     color:
+    highlight:
+    numFrames:
 }
 
 Global Variable:
@@ -41,3 +43,23 @@ var velocity;
 问题2： element.x会占很大的空间，如何减小浏览器的压力？
     当x的值到达一定数量时，执行动画，清空x
 
+setColor()
+用一帧迅速转换指定元素的颜色。
+
+Highlight() 需要实现的功能：
+因为requestAnimationFrame()以60fps的速度渲染，60 frames = 1s
+
+相较于其他排序算法，快速排序对highlight的要求是最多的。这包括以下几种情形：
+    1. 在对两个元素进行比较时，需要首先highlight (color.selected) 一秒
+    2. 在对某一部分进行快速排序时，该部分的所有元素都需要被标记
+    3. pivot需要被特殊标记，并保持被标记一段时间
+
+所以highlight的功能是让指定元素在接下来的一秒中显示为指定的颜色。
+这个函数将不会对1秒之后元素颜色的行为进行控制。
+
+color scheme：
+    1. swap() 静止的元素保持末状态，移动的元素在移动过程中显示color.swap
+    2. highlight() 非指定元素保持末状态，指定元素显示color.selected 一秒钟
+    3. setColor() 非指定元素保持末状态，指定元素显示指定颜色一帧
+
+    highlight可以看作是将setColor执行60次。
