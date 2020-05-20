@@ -7,7 +7,7 @@ export default class Sorting extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            textField: 0,
+            length: 0,
             data: [],
         }
         this.canvas = React.createRef();
@@ -24,8 +24,9 @@ export default class Sorting extends React.Component {
 
     initialize(){
         const canvas = this.canvas.current;
-        const arraySize = this.state.textField;
-        var dataArray = initializeCanvaArray(20,canvas);
+        // Transform (string) length to a base 10 number
+        const arraySize = parseInt(this.state.length, 10);
+        var dataArray = initializeCanvaArray(arraySize,canvas);
 
         // console.log(dataArray);
         this.setState({data: dataArray});
