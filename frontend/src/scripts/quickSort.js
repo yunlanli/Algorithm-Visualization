@@ -38,7 +38,7 @@ function quickSort(canvas,array,velocity){
         var j;
 
         for (let i=begin+1; i<= end; i++){
-            for (j=i; j>begin && ( array[j].value - array[j-1].value < 0 ); j--){
+            for (j=i; j>begin && ( array[j].value < array[j-1].value ); j--){
                 // Animation will show that j and j-1 element swap positions
                 Animation.highlight(array, [array[j-1],array[j]], color.selected);
                 Animation.swap(array, array[j-1], array[j], velocity);
@@ -47,10 +47,13 @@ function quickSort(canvas,array,velocity){
             }
             
             // show the last comparison that failed
-            if ( j > 0 ){
+            // when j = begin, we don't need to highlight anything since we have hit the 
+            // front of the array, indicating there are NO MORE comparisons to do : )
+            if ( j > begin ){
                 Animation.highlight(array, [array[j-1],array[j]], color.selected);
                 Animation.restoreColor(array, [array[j-1],array[j]]);
-            } 
+            }
+
         }
 
         // sub-array sorted, shade sub-array
@@ -133,9 +136,11 @@ function quickSort(canvas,array,velocity){
 
     function swap(pos1,pos2){
         var tmp = array[pos1];
-        array[pos1] = array[pos2];
+        array[pos1] = array[pos2];        
         array[pos2] = tmp;
     }
-}
+}    
+
+
 
 export { quickSort };
