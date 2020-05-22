@@ -28,7 +28,7 @@ function quickSort(canvas,array,velocity){
             Animation.shade(array, array.slice(pivot, end+1));
             Animation.restoreColor(array, array.slice(begin, pivot));
             quickSortHelper(begin,pivot-1);
-            Animation.shade(array, array.slice(begin, pivot+1));
+            Animation.shade(array, array.slice(begin, pivot));
             Animation.restoreColor(array, array.slice(pivot+1, end+1));
             quickSortHelper(pivot+1,end);
         }
@@ -38,7 +38,7 @@ function quickSort(canvas,array,velocity){
         var j;
 
         for (let i=begin+1; i<= end; i++){
-            for (j=i; j>0 && ( array[j].value - array[j-1].value < 0 ); j--){
+            for (j=i; j>begin && ( array[j].value - array[j-1].value < 0 ); j--){
                 // Animation will show that j and j-1 element swap positions
                 Animation.highlight(array, [array[j-1],array[j]], color.selected);
                 Animation.swap(array, array[j-1], array[j], velocity);
@@ -65,7 +65,7 @@ function quickSort(canvas,array,velocity){
             Animation.swap(array,array[pos1],array[pos2],velocity);
             swap(pos1,pos2);
         }
-        Animation.setColor(array,[array[pos1],array[pos2]], color.default);
+        Animation.restoreColor(array,[array[pos1],array[pos2]]);
     }
 
     function medianOfThree(begin,end){
@@ -95,7 +95,7 @@ function quickSort(canvas,array,velocity){
         while(i <= j){
             // while pointer i hasn't encountered an item bigger than the pivot
             // DON'T USE '<= '! It runs the risk of letting i go beyond pivot
-            while (array[i].value - pivot < 0){ 
+            while (array[i].value < pivot ){ 
                 if (i !== j)
                     Animation.restoreColor(array, [array[i]]);
                 Animation.highlight(array, [array[++i]], color.selected);
@@ -103,7 +103,7 @@ function quickSort(canvas,array,velocity){
             }
 
             // while pointer j hasn't encountered an item smaller than the pivot
-            while (array[j].value - pivot > 0) { 
+            while (array[j].value >= pivot ) { 
                 if (j !== i)
                     Animation.restoreColor(array,[array[j]]); 
                 Animation.highlight(array, [array[--j]], color.selected);

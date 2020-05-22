@@ -9,12 +9,14 @@ export default class Sorting extends React.Component {
         this.state = {
             length: 0,
             data: [],
+            velocity: 20
         }
         this.canvas = React.createRef();
 
         this.handleInput = this.handleInput.bind(this);
         this.initialize = this.initialize.bind(this);
         this.moveElement = this.moveElement.bind(this);
+        this.setSpeed = this.setSpeed.bind(this);
     }
 
     handleInput(e){
@@ -37,13 +39,19 @@ export default class Sorting extends React.Component {
 
     moveElement(){
         const canvas = this.canvas.current;
-        quickSort(canvas,this.state.data,2000);
+        const velocity = parseInt(this.state.velocity,10);
+        quickSort(canvas,this.state.data,velocity);
+    }
+
+    setSpeed(e){
+        this.setState({velocity: e.target.value});
+        e.preventDefault();
     }
 
     render(){
         return(
             <div>
-                <input type="number" placeholder="Enter Something" onChange={this.handleInput}/>
+                <input type="number" placeholder="Array Size" onChange={this.handleInput}/>
                 
                 <canvas width='700' height='700' ref={this.canvas}/>
 
@@ -52,6 +60,7 @@ export default class Sorting extends React.Component {
                 </button>
 
                 <button type="button" onClick={this.moveElement}>Move</button>
+                <input type="number" placeholder = "Animation Speed" onChange={this.setSpeed} />
 
 
             </div>  
