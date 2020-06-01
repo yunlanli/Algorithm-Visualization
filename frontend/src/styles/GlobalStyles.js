@@ -6,6 +6,7 @@ const color = {
     button: '#09f2a3',
     lightGray: '#dcdcdc',
     slider: '#9dcfff',
+    selectedButton: '#f6f6f6'
     // slider: '#fff1ed',
 }
     

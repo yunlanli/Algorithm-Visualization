@@ -4,7 +4,7 @@ import { initializeCanvaArray } from '../scripts/initialization';
 // import { moveWrapper } from '../scripts/movement';
 import { quickSort } from '../scripts/quickSort';
 import NavBar from './Navbar';
-import { Button, Slider } from './Controls'; 
+import { Button, Slider, Selector } from './Controls'; 
 
 const ControllerWrapper = styled.div`
     display: flex;
@@ -16,8 +16,12 @@ const ControllerWrapper = styled.div`
 
 const CustomCanvas = styled.canvas`
     display: flex;
-    margin: 10rem auto 0rem auto;
+    margin: 2rem auto 0rem auto;
 `;
+
+const ROUTINES = [
+    "Insertion Sort", "Quick Sort", "Merge Sort", 
+    "Heap Sort", "Shell Sort", "Radix Sort"];
 
 export default class Sorting extends React.Component {
     constructor(props){
@@ -73,8 +77,10 @@ export default class Sorting extends React.Component {
                 <NavBar />
                 {/* <input type="number" placeholder="Array Size" onChange={this.handleInput}/> */}
                 
-                
+                <Selector list={ROUTINES}  />
                 <CustomCanvas width='700' height='500' ref={this.canvas}/>
+                
+                
 
                 <ControllerWrapper>
                     <Button onClick={this.initialize}>

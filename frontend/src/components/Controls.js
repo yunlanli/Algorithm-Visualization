@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
 import * as GlobalStyles from '../styles/GlobalStyles';
 
 /* Todo: 
@@ -11,9 +11,11 @@ const Button = styled.button`
     /* font-family:  */
     padding: 0.25em 1em;
     border-radius: 2rem;
-    margin: 3rem 1rem;
+    margin: 0 1rem;
     border: 2px solid ${GlobalStyles.color.button};
     background: transparent;
+    white-space: nowrap; /* prevents line breaking */
+    width: max-content;
 
     &:hover {
         opacity: 10;
@@ -59,6 +61,25 @@ const Slider = styled.input`
     }
 `;
 
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+`;
+
+const AnimatedWrapper = styled(Wrapper)`
+    height: 100%;
+    overflow: hidden;
+    animation: expand 1.5s ease forwards;
+    
+    @keyframes expand {
+        from {width: 0%}
+        to {width: 100%}
+    }
+`;
+
+
 const RangeSlider = (props) => {
     return (
         // If a react component has a value attribute
@@ -78,4 +99,49 @@ const RangeSlider = (props) => {
     )
 }
 
-export { Button, RangeSlider as Slider };
+function CustomButton(props) {
+    const [clicked, setClick] = useState(false);
+    const button = React.createRef();
+
+    const handleClick = () => {
+        props.cb.apply(props.cb, props.params);
+        button.current.style.backgroundColor = clicked ? 'white' : GlobalStyles.color.selectedButton;
+        setClick(!clicked);
+    }
+
+    return (
+        <Button ref={button} onClick={() => handleClick()}> {props.content} </Button>
+    )
+}
+const Type = (props) => {
+    const [list, eventHandler] = props;
+    return(
+        <AnimatedWrapper>
+            {list.map((name) => <CustomButton key={name} cb={eventHandler} params={[name]} content={name} />)}
+        </AnimatedWrapper>
+    )
+}
+
+// Takes in a list of algorihtms
+function Selector(props) {
+    const [display, setDisplay] = useState(false);
+    const [algorithm, setAlgorithm] = useState('Algorithms');
+
+    // show "Algorithm" when none is selected or display is false
+    const showText = () => {
+        return display ? 'Algorithms' : algorithm;
+    }
+
+    return (
+        <Wrapper>
+            <Button onClick={() => {setDisplay(!display)} }>
+                {showText()}
+            </Button> 
+
+            {display && Type([props.list,setAlgorithm])} 
+        </Wrapper>
+        
+    )
+}
+
+export { Button, RangeSlider as Slider, Selector };
