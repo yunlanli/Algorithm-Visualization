@@ -16,9 +16,10 @@ const Button = styled.button`
     background: transparent;
     white-space: nowrap; /* prevents line breaking */
     width: max-content;
+    transition: background .2s;
 
     &:hover {
-        opacity: 10;
+        background: ${GlobalStyles.color.lightGray}
     }
 `;
 
@@ -105,7 +106,15 @@ function CustomButton(props) {
 
     const handleClick = () => {
         props.cb.apply(props.cb, props.params);
-        button.current.style.backgroundColor = clicked ? 'white' : GlobalStyles.color.selectedButton;
+
+        if (clicked) {
+            button.current.style.backgroundColor = "white";
+            button.current.style.color = "black";
+        } else {
+            button.current.style.backgroundColor = GlobalStyles.color.slider;
+            button.current.style.color = "white";
+        }
+
         setClick(!clicked);
     }
 
@@ -132,13 +141,18 @@ function Selector(props) {
         return display ? 'Algorithms' : algorithm;
     }
 
+    const updateState = (routine) => {
+        setAlgorithm(routine);
+        props.cb(routine);
+    }
+
     return (
         <Wrapper>
             <Button onClick={() => {setDisplay(!display)} }>
-                {showText()}
+                {showText()} 
             </Button> 
 
-            {display && Type([props.list,setAlgorithm])} 
+            {display && Type([props.list,updateState])} 
         </Wrapper>
         
     )

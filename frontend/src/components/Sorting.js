@@ -5,7 +5,9 @@ import { initializeCanvaArray } from '../scripts/initialization';
 import { quickSort } from '../scripts/quickSort';
 import NavBar from './Navbar';
 import { Button, Slider, Selector } from './Controls'; 
-
+import { ROUTINES, INFO } from '../assets/Sorting';
+import InfoCard from './InfoCard';
+ 
 const ControllerWrapper = styled.div`
     display: flex;
     align-items: center;
@@ -19,9 +21,20 @@ const CustomCanvas = styled.canvas`
     margin: 2rem auto 0rem auto;
 `;
 
-const ROUTINES = [
-    "Insertion Sort", "Quick Sort", "Merge Sort", 
-    "Heap Sort", "Shell Sort", "Radix Sort"];
+const Content = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+`;
+
+const Animation = styled(Content)`
+    flex-direction: column;
+`;
+
+const Info = styled(Content)`
+    align-items: center;
+    justify-content: center;
+`;
 
 export default class Sorting extends React.Component {
     constructor(props){
@@ -29,7 +42,9 @@ export default class Sorting extends React.Component {
         this.state = {
             length: 50,
             data: [],
-            velocity: 20
+            velocity: 20,
+            inAnimation: false,
+            type: "Quick Sort",
         }
         this.canvas = React.createRef();
 
@@ -37,6 +52,7 @@ export default class Sorting extends React.Component {
         this.initialize = this.initialize.bind(this);
         this.moveElement = this.moveElement.bind(this);
         this.setSpeed = this.setSpeed.bind(this);
+        this.selectRoutine = this.selectRoutine.bind(this);
     }
 
     handleSliderChange(e){
@@ -61,6 +77,8 @@ export default class Sorting extends React.Component {
     }
 
     moveElement(){
+        this.setState({inAnimation: !this.state.inAnimation});
+
         const canvas = this.canvas.current;
         const velocity = parseInt(this.state.velocity,10);
         quickSort(canvas,this.state.data,velocity);
@@ -71,30 +89,41 @@ export default class Sorting extends React.Component {
         e.preventDefault();
     }
 
+    selectRoutine(routine) {
+        this.setState({type: routine});
+    }
+
     render(){
         return(
             <div>
                 <NavBar />
-                {/* <input type="number" placeholder="Array Size" onChange={this.handleInput}/> */}
-                
-                <Selector list={ROUTINES}  />
-                <CustomCanvas width='700' height='500' ref={this.canvas}/>
-                
-                
+                <Selector list={ROUTINES} cb={this.selectRoutine} />
 
-                <ControllerWrapper>
-                    <Button onClick={this.initialize}>
-                        Create a random array
-                    </Button>
-                    <Slider min="15" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
+                <Content>
+                    <Animation>
+                        <CustomCanvas width='700' height='500' ref={this.canvas}/>
 
-                    <Button onClick={this.moveElement}>Move</Button>
-                    <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
-                    {/* <input type="number" placeholder = "Animation Speed" onChange={this.setSpeed} /> */}
-                </ControllerWrapper>
+                        <ControllerWrapper>
+                            <Button onClick={this.initialize}>
+                                Create a random array
+                            </Button>
+                            <Slider min="15" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
+
+                            <Button onClick={this.moveElement}>{this.state.inAnimation ? "Pause" : "Move"}</Button>
+                            <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
+                        </ControllerWrapper>
+
+                    </Animation>
+
+                    <Info>
+                        <InfoCard type={this.state.type} />
+                    </Info>
+
+                </Content>
                 
-
-
+                
+                
+            
             </div>  
         ); 
     }       
