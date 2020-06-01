@@ -1,0 +1,24 @@
+User Interface Components
+1. Page Header - Algorithm Visualization
+2. canvas
+3. Animation Controllers
+    - Input field that receives animation parameters
+        - Speed of Animation (Element moving speed on canvas)
+        - Highlight Speed? (duration of highlight when an element is selected for comparison)
+            - This in large determines the overall duration of the animation as
+                there are significantly more comparisons than swappings
+            - Should this parameter combine with moving speed to form a single parameter?
+             Is it better for user to be able to specify this?
+        - Array size
+            - We will need to specify a maximum length in our program based on the canvas size
+        - Canvas size
+            - should we instead dynamically changing the canvas size based on user input of 
+            array size ? Yes
+    - Stop / Pause Animation
+4. Type of Algorithm to run
+    - display all or use a menu ?
+5. Message Component
+    Provides an introduction of the algorithm selected. Its routine and analysis of time and 
+    space complexity.
+6. A Link - Back - that takes the user to the main Page
+    

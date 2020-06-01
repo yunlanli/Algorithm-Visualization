@@ -1,27 +1,66 @@
 import React from 'react';
+import styled from 'styled-components';
 import { initializeCanvaArray } from '../scripts/initialization';
 // import { moveWrapper } from '../scripts/movement';
 import { quickSort } from '../scripts/quickSort';
+import NavBar from './Navbar';
+import { Button, Slider, Selector } from './Controls'; 
+import { ROUTINES, INFO } from '../assets/Sorting';
+import InfoCard from './InfoCard';
+ 
+const ControllerWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 3rem;
+`;
+
+const CustomCanvas = styled.canvas`
+    display: flex;
+    margin: 2rem auto 0rem auto;
+`;
+
+const Content = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+`;
+
+const Animation = styled(Content)`
+    flex-direction: column;
+`;
+
+const Info = styled(Content)`
+    align-items: center;
+    justify-content: center;
+`;
 
 export default class Sorting extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            length: 0,
+            length: 50,
             data: [],
-            velocity: 20
+            velocity: 20,
+            inAnimation: false,
+            type: "Quick Sort",
         }
         this.canvas = React.createRef();
 
-        this.handleInput = this.handleInput.bind(this);
+        this.handleSliderChange = this.handleSliderChange.bind(this);
         this.initialize = this.initialize.bind(this);
         this.moveElement = this.moveElement.bind(this);
         this.setSpeed = this.setSpeed.bind(this);
+        this.selectRoutine = this.selectRoutine.bind(this);
     }
 
-    handleInput(e){
+    handleSliderChange(e){
+        console.log(e.target.value);
         this.setState({length: e.target.value});
         e.preventDefault();
+
+        this.initialize();
     }
 
     initialize(){
@@ -38,6 +77,8 @@ export default class Sorting extends React.Component {
     }
 
     moveElement(){
+        this.setState({inAnimation: !this.state.inAnimation});
+
         const canvas = this.canvas.current;
         const velocity = parseInt(this.state.velocity,10);
         quickSort(canvas,this.state.data,velocity);
@@ -48,21 +89,41 @@ export default class Sorting extends React.Component {
         e.preventDefault();
     }
 
+    selectRoutine(routine) {
+        this.setState({type: routine});
+    }
+
     render(){
         return(
             <div>
-                <input type="number" placeholder="Array Size" onChange={this.handleInput}/>
+                <NavBar />
+                <Selector list={ROUTINES} cb={this.selectRoutine} />
+
+                <Content>
+                    <Animation>
+                        <CustomCanvas width='700' height='500' ref={this.canvas}/>
+
+                        <ControllerWrapper>
+                            <Button onClick={this.initialize}>
+                                Create a random array
+                            </Button>
+                            <Slider min="15" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
+
+                            <Button onClick={this.moveElement}>{this.state.inAnimation ? "Pause" : "Move"}</Button>
+                            <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
+                        </ControllerWrapper>
+
+                    </Animation>
+
+                    <Info>
+                        <InfoCard type={this.state.type} />
+                    </Info>
+
+                </Content>
                 
-                <canvas width='700' height='700' ref={this.canvas}/>
-
-                <button type="button" onClick={this.initialize}>
-                        Create a random array
-                </button>
-
-                <button type="button" onClick={this.moveElement}>Move</button>
-                <input type="number" placeholder = "Animation Speed" onChange={this.setSpeed} />
-
-
+                
+                
+            
             </div>  
         ); 
     }       
