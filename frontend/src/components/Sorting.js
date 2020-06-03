@@ -44,7 +44,7 @@ export default class Sorting extends React.Component {
             data: [],
             velocity: 20,
             inAnimation: false,
-            type: "Quick Sort",
+            type: "none",
         }
         this.canvas = React.createRef();
 
@@ -90,6 +90,8 @@ export default class Sorting extends React.Component {
     }
 
     selectRoutine(routine) {
+        // unhighlight the selected button if there is one
+        if (this.state.type !== "Algorithms")
         this.setState({type: routine});
     }
 
@@ -97,7 +99,7 @@ export default class Sorting extends React.Component {
         return(
             <div>
                 <NavBar />
-                <Selector list={ROUTINES} cb={this.selectRoutine} />
+                <Selector list={ROUTINES} cb={this.selectRoutine} currentType={this.state.type} />
 
                 <Content>
                     <Animation>
