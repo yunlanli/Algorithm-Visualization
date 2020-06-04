@@ -21,6 +21,10 @@ const Button = styled.button`
     &:hover {
         background: ${GlobalStyles.color.lightGray}
     }
+    
+    &:focus {
+        outline: none;
+    }
 `;
 
 const SliderWrapper = styled.div`
@@ -104,10 +108,11 @@ const CustomButton = React.forwardRef((props,ref) => {
     const [clicked, setClick] = useState(false);
 
     const handleClick = () => {
+        let prevCancelled = clicked && ref.current.style.color === "black";
+        
         props.restoreSibling();
         props.cb.apply(props.cb, props.params);
 
-        let prevCancelled = clicked && ref.current.style.color === "black";
         if (!clicked || prevCancelled) {
             ref.current.style.backgroundColor = GlobalStyles.color.slider;
             ref.current.style.color = "white";

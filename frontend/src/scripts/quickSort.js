@@ -1,6 +1,8 @@
 import * as Animation from "./movement"
 import { drawArray } from './initialization';
 import { color } from '../styles/GlobalStyles';
+import { swap } from './sortHelper';
+import { insertionSortHelper as insertionSort} from './insertionSort';
 
 function quickSort(canvas,array,velocity){
     // calls the helper method
@@ -15,7 +17,7 @@ function quickSort(canvas,array,velocity){
     function quickSortHelper(begin,end){
         // if end - begin < 3, use insertion sort
         if( end - begin < 3){
-            insertionSort(begin,end);
+            insertionSort(array,begin,end,velocity);
         }else{
             // select the pivot using medianOfThree algorithm
             medianOfThree(begin,end);
@@ -34,39 +36,13 @@ function quickSort(canvas,array,velocity){
         }
     }
 
-    function insertionSort(begin,end){
-        var j;
-
-        for (let i=begin+1; i<= end; i++){
-            for (j=i; j>begin && ( array[j].value < array[j-1].value ); j--){
-                // Animation will show that j and j-1 element swap positions
-                Animation.highlight(array, [array[j-1],array[j]], color.selected);
-                Animation.swap(array, array[j-1], array[j], velocity);
-                Animation.restoreColor(array, [array[j-1],array[j]]);
-                swap(j-1,j);
-            }
-            
-            // show the last comparison that failed
-            // when j = begin, we don't need to highlight anything since we have hit the 
-            // front of the array, indicating there are NO MORE comparisons to do : )
-            if ( j > begin ){
-                Animation.highlight(array, [array[j-1],array[j]], color.selected);
-                Animation.restoreColor(array, [array[j-1],array[j]]);
-            }
-
-        }
-
-        // sub-array sorted, shade sub-array
-        Animation.shade(array, array.slice(begin, end+1));
-    }
-
     // high-level animation that displays a single comparison
     function compare(pos1, pos2){
         var compareResult = array[pos1].value - array[pos2].value;
         Animation.highlight(array,[array[pos1],array[pos2]], color.selected);
         if (compareResult > 0){
             Animation.swap(array,array[pos1],array[pos2],velocity);
-            swap(pos1,pos2);
+            swap(array,pos1,pos2);
         }
         Animation.restoreColor(array,[array[pos1],array[pos2]]);
     }
@@ -82,7 +58,7 @@ function quickSort(canvas,array,velocity){
         // move the pivot to the second to last position
         Animation.setColor(array, [array[mid]], color.pivot);
         Animation.swap(array,array[mid],array[end-1],velocity);
-        swap(mid,end-1);
+        swap(array,mid,end-1);
     }
 
     function partition(begin,end){
@@ -116,7 +92,7 @@ function quickSort(canvas,array,velocity){
             // swap i,j elements if i,j haven't crossed
             if (i < j){
                 Animation.swap(array,array[i],array[j],velocity);
-                swap(i,j);
+                swap(array,i,j);
             }   
         }
         
@@ -125,19 +101,13 @@ function quickSort(canvas,array,velocity){
         
         // move the pivot in between the 2 partitions, i.e after j, before i
         Animation.swap(array,array[i],array[end-1],velocity);
-        swap(i,end-1);
+        swap(array,i,end-1);
 
         // Restore the color of the pivot
         Animation.restoreColor(array, [array[i]]);
 
         // return the position of the pivot
         return i;
-    }
-
-    function swap(pos1,pos2){
-        var tmp = array[pos1];
-        array[pos1] = array[pos2];        
-        array[pos2] = tmp;
     }
 }    
 
