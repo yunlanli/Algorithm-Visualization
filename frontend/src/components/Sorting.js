@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { initializeCanvaArray } from '../scripts/initialization';
-import { quickSort } from '../scripts/quickSort';
+import { initializeCanvaArray } from '../scripts/Animation/initialization';
+import Sort from '../scripts/Sorting/Sort';
 import NavBar from './Navbar';
 import { Button, Slider, Selector } from './Controls'; 
 import { ROUTINES, INFO } from '../assets/Sorting';
@@ -34,6 +34,8 @@ const Info = styled(Content)`
     align-items: center;
     justify-content: center;
 `;
+
+const DEFAULTALGORITHM = "Insertion Sort";
 
 export default class Sorting extends React.Component {
     constructor(props){
@@ -76,11 +78,17 @@ export default class Sorting extends React.Component {
     }
 
     moveElement(){
-        this.setState({inAnimation: !this.state.inAnimation});
+        this.setState({inAnimation: true});
 
         const canvas = this.canvas.current;
         const velocity = parseInt(this.state.velocity,10);
-        quickSort(canvas,this.state.data,velocity);
+
+        if (this.state.type === "none")
+            Sort[DEFAULTALGORITHM](canvas,this.state.data,velocity);
+        else
+            Sort[this.state.type](canvas,this.state.data,velocity);
+
+        // TODO: update this.state.inAnimation from drawArray
     }
 
     setSpeed(e){

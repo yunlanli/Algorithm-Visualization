@@ -1,4 +1,4 @@
-import { color } from '../styles/GlobalStyles';
+import { color } from '../../styles/GlobalStyles';
 
 function swapWrapper(array, element1, element2,velocity){
     var frames = element1.numFrames+1;

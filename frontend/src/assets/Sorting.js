@@ -11,7 +11,13 @@ const ROUTINES =
 
 const INFO = {
     "Insertion Sort": {
-        text: "",
+        text: 
+        `Insertion Sort is an O(N^2) general-purpose sorting algorithm. In the best case where a sorted array is given, it sorts the array in linear time.
+        
+        Implemented with 2 simple for-loops, Inserstion Sort has a very small constant factor in its time complexity. Therefore, it's faster when the input array is small, despite having a higher-ordered big-Oh compared to other algorithms such as quick sort, heap sort and merge sort. 
+        
+        Insertion Sort iterates over each element from left to right. For each element, it finds the appropriate position in the sorted array (the subarray formed by all elements before the current element) and then put it in. 
+        `,
         link: "https://www.geeksforgeeks.org/insertion-sort/"
     },
 

@@ -1,6 +1,6 @@
-import * as Animation from "./movement"
-import { drawArray } from './initialization';
-import { color } from '../styles/GlobalStyles';
+import * as Animation from "../Animation/movement"
+import { drawArray } from '../Animation/initialization';
+import { color } from '../../styles/GlobalStyles';
 import { swap } from './sortHelper';
 import { insertionSortHelper as insertionSort} from './insertionSort';
 
@@ -113,4 +113,4 @@ function quickSort(canvas,array,velocity){
 
 
 
-export { quickSort };
+export default quickSort;

@@ -1,4 +1,4 @@
-import { color } from '../styles/GlobalStyles';
+import { color } from '../../styles/GlobalStyles';
 
 /* 
 * Initializes a canvas with a visualization of a given size of
