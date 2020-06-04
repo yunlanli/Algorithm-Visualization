@@ -21,6 +21,10 @@ const Button = styled.button`
     &:hover {
         background: ${GlobalStyles.color.lightGray}
     }
+    
+    &:focus {
+        outline: none;
+    }
 `;
 
 const SliderWrapper = styled.div`
@@ -100,33 +104,69 @@ const RangeSlider = (props) => {
     )
 }
 
-function CustomButton(props) {
+const CustomButton = React.forwardRef((props,ref) => {
     const [clicked, setClick] = useState(false);
-    const button = React.createRef();
 
     const handleClick = () => {
+        let prevCancelled = clicked && ref.current.style.color === "black";
+        
+        props.restoreSibling();
         props.cb.apply(props.cb, props.params);
 
-        if (clicked) {
-            button.current.style.backgroundColor = "white";
-            button.current.style.color = "black";
-        } else {
-            button.current.style.backgroundColor = GlobalStyles.color.slider;
-            button.current.style.color = "white";
+        if (!clicked || prevCancelled) {
+            ref.current.style.backgroundColor = GlobalStyles.color.slider;
+            ref.current.style.color = "white";
         }
 
-        setClick(!clicked);
+        if (!prevCancelled)
+            setClick(!clicked);
     }
 
     return (
-        <Button ref={button} onClick={() => handleClick()}> {props.content} </Button>
+        <Button ref={ref} onClick={() => handleClick()}> {props.content} </Button>
     )
-}
+})
+
+/* HOC of CustomButton in Selector Component 
+* TODO: 
+* Currently, if Type has hooks, it will result in a more hooks rendered than the previous render error
+* To avoid this, we can turn it into a class component. This will allow us to elevate the state of each button
+* to avoid the state of button is not in sync with user events. Specifically, a button gets cancelled through
+* clicking another button.
+*/
 const Type = (props) => {
-    const [list, eventHandler] = props;
+    const [list, eventHandler,type] = props;
+
+    // for each button instance, create a ref for Type to control its appearance
+    const refs = new Array(list.length).fill(0).map(() => React.createRef());
+    const NAMETOREF = {};
+    for (let idx in list)
+        NAMETOREF[list[idx]] = refs[idx];
+        
+
+    // function to unhighlight selected button if any after another button is selected
+    // this ensures that only one button gets highlighted each time
+    const restore = () => {
+        if (type !== "none"){
+            console.log(type);
+            // restore the appearance of the selected component
+            let selectedBtn = NAMETOREF[type].current;
+
+            selectedBtn.style.backgroundColor = "white";
+            selectedBtn.style.color = "black";
+        }
+    }
+
     return(
         <AnimatedWrapper>
-            {list.map((name) => <CustomButton key={name} cb={eventHandler} params={[name]} content={name} />)}
+            {list.map((name, idx) => 
+                <CustomButton   key={name} 
+                                ref = {refs[idx]}
+                                restoreSibling={restore}
+                                cb={eventHandler}
+                                params={[name]}
+                                content={name}
+                />)}
         </AnimatedWrapper>
     )
 }
@@ -152,7 +192,7 @@ function Selector(props) {
                 {showText()} 
             </Button> 
 
-            {display && Type([props.list,updateState])} 
+            {display && Type([props.list,updateState,props.currentType])} 
         </Wrapper>
         
     )

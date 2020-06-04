@@ -47,13 +47,16 @@ const Link = styled.a`
 `;
 
 function InfoCard(props) {
-    return(
-        <Wrapper>
-            <Heading> {props.type} </Heading>
-            <Text> {INFO[props.type].text} </Text>
-            <Link href={INFO[props.type].link}>Learn More </Link>
-        </Wrapper>
-    )
+    if (props.type === "none")
+        return null;
+    else
+        return(
+            <Wrapper>
+                <Heading> {props.type} </Heading>
+                <Text> {INFO[props.type].text} </Text>
+                <Link href={INFO[props.type].link}>Learn More </Link>
+            </Wrapper>
+        )
 }
 
 export default InfoCard;
