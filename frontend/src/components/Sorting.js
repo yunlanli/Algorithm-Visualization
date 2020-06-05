@@ -4,7 +4,7 @@ import { initializeCanvaArray } from '../scripts/Animation/initialization';
 import Sort from '../scripts/Sorting/Sort';
 import NavBar from './Navbar';
 import { Button, Slider, Selector } from './Controls'; 
-import { ROUTINES, INFO } from '../assets/Sorting';
+import { ROUTINES } from '../assets/Sorting';
 import InfoCard from './InfoCard';
  
 const ControllerWrapper = styled.div`
@@ -71,9 +71,9 @@ export default class Sorting extends React.Component {
         const canvas = this.canvas.current;
         // Transform (string) length to a base 10 number
         const arraySize = parseInt(this.state.length, 10);
-        var dataArray = initializeCanvaArray(arraySize,canvas);
+        const twoRows = this.state.type === "Merge Sort" ? true : false;
+        var dataArray = initializeCanvaArray(arraySize,canvas,twoRows);
 
-        // console.log(dataArray);
         this.setState({data: dataArray});
     }
 

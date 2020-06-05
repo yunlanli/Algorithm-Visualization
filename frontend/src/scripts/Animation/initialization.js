@@ -5,13 +5,13 @@ import { color } from '../../styles/GlobalStyles';
 * array of random integers
 * @param size: the size of the array of random integer
 */
-export function initializeCanvaArray(size,canvas){
+export function initializeCanvaArray(size,canvas,twoRows=false){
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
     // prepare array for drawing
     var array = createRandomArray(size);
-    transformArrayFormat(array,canvas.width,canvas.height,color.default);
+    transformArrayFormat(array,canvas.width,canvas.height,color.default,twoRows);
 
     // draw array on the canvas node
     drawArray(array,canvas,0);
@@ -61,17 +61,19 @@ export function drawArray(array,canvas,offset) {
 * @param size: the desired size of the integer array
 * @return an array of objects
 */
+const SCALEFACTOR = 10;
 function createRandomArray(size){
   return Array(size).fill().map(() => {
     return {
-      value: Math.floor(Math.random()*size*10)+1,
+      value: Math.floor(Math.random()*size*SCALEFACTOR)+1,
       x: [0],
       numFrames: 1
     }
   });
 }
 
-function transformArrayFormat(array, width, height, color){
+const ROWMARGIN = 5;
+function transformArrayFormat(array, width, height, color, twoRows=false){
   // width of each element based on array size and canvas width
   // Ensure that both attributes are type integer
   const WIDTH = Math.floor(width/array.length);
@@ -79,10 +81,11 @@ function transformArrayFormat(array, width, height, color){
   if (SPACE === 0)
     SPACE = 1;
   
-  function getHeight(val){
-    var largest = 10*array.length;
-
-    return Math.floor(val*(height/largest));
+  function getHeight(val, twoRows){
+    var largest = SCALEFACTOR*array.length+1+ROWMARGIN;
+    var scaledVal = val*(height/largest);
+    
+    return twoRows ? Math.floor(scaledVal/2+1) : Math.floor(scaledVal+1);
   }
 
   // iterate over elements in the array and set attributes necessary for drawing
@@ -91,9 +94,10 @@ function transformArrayFormat(array, width, height, color){
 
     current.id = key; // unique id for each element, used for identification
     current.width = WIDTH - SPACE;
-    current.height = getHeight(current.value);
-    current.x.push(key*WIDTH + SPACE);
-    current.y = height - current.height;
+    current.height = getHeight(current.value,twoRows);
     current.color = [color];
+    current.x.push(key*WIDTH + SPACE);
+    current.y = twoRows ? Math.floor(height/2- current.height) : height - current.height;
+    
   }
 }
