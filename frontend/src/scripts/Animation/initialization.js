@@ -5,13 +5,13 @@ import { color } from '../../styles/GlobalStyles';
 * array of random integers
 * @param size: the size of the array of random integer
 */
-export function initializeCanvaArray(size,canvas){
+function initializeCanvaArray(size,canvas,twoRows=false){
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
     // prepare array for drawing
     var array = createRandomArray(size);
-    transformArrayFormat(array,canvas.width,canvas.height,color.default);
+    transformArrayFormat(array,canvas.width,canvas.height,color.default,twoRows);
 
     // draw array on the canvas node
     drawArray(array,canvas,0);
@@ -25,7 +25,7 @@ export function initializeCanvaArray(size,canvas){
 * for each element in the input array
 * @param array: the array to draw on the canvas element
 */
-export function drawArray(array,canvas,offset) {
+function drawArray(array,canvas,offset) {
   var raf;
   var count = offset;
 
@@ -46,7 +46,7 @@ export function drawArray(array,canvas,offset) {
       for (let current of array){
         // draw rectangle
         ctx.fillStyle = current.color[count-1];
-        ctx.fillRect(current.x[count],current.y,current.width,current.height);
+        ctx.fillRect(current.x[count],current.y[count],current.width,current.height);
         --current.numFrames;
       }
 
@@ -61,28 +61,29 @@ export function drawArray(array,canvas,offset) {
 * @param size: the desired size of the integer array
 * @return an array of objects
 */
+const SCALEFACTOR = 10;
 function createRandomArray(size){
   return Array(size).fill().map(() => {
     return {
-      value: Math.floor(Math.random()*size*10)+1,
+      value: Math.floor(Math.random()*size*SCALEFACTOR)+1,
       x: [0],
+      y: [0],
       numFrames: 1
     }
   });
 }
 
-function transformArrayFormat(array, width, height, color){
+const ROWMARGIN = 5;
+function transformArrayFormat(array, width, height, color, twoRows=false){
   // width of each element based on array size and canvas width
   // Ensure that both attributes are type integer
-  const WIDTH = Math.floor(width/array.length);
-  var SPACE = Math.floor(0.1*WIDTH);
-  if (SPACE === 0)
-    SPACE = 1;
+  const [WIDTH, SPACE] = getWidthSpace(width, array.length);
   
-  function getHeight(val){
-    var largest = 10*array.length;
-
-    return Math.floor(val*(height/largest));
+  function getHeight(val, twoRows){
+    var largest = SCALEFACTOR*array.length+1+ROWMARGIN;
+    var scaledVal = val*(height/largest);
+    
+    return twoRows ? Math.floor(scaledVal/2+1) : Math.floor(scaledVal+1);
   }
 
   // iterate over elements in the array and set attributes necessary for drawing
@@ -91,9 +92,31 @@ function transformArrayFormat(array, width, height, color){
 
     current.id = key; // unique id for each element, used for identification
     current.width = WIDTH - SPACE;
-    current.height = getHeight(current.value);
-    current.x.push(key*WIDTH + SPACE);
-    current.y = height - current.height;
+    current.height = getHeight(current.value,twoRows);
     current.color = [color];
+    current.x.push(calculateX(key,WIDTH,SPACE));
+    current.y.push(calculateY(height,current,twoRows));
   }
 }
+
+function getWidthSpace(canvasWidth, numElements) {
+  var width = Math.floor(canvasWidth/numElements);
+  var space = Math.floor(0.1*width);
+  if (space === 0)
+    space = 1;
+
+    return [width, space];
+}
+
+function calculateX(index, width, space) {
+  return index*width + space;
+}
+
+function calculateY(canvasHeight, element, twoRows=false) {
+  if (twoRows)
+    return Math.floor(canvasHeight/2- element.height);
+
+  return canvasHeight - element.height;
+}
+
+export { initializeCanvaArray, drawArray, getWidthSpace, calculateX, calculateY };

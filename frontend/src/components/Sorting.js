@@ -4,7 +4,7 @@ import { initializeCanvaArray } from '../scripts/Animation/initialization';
 import Sort from '../scripts/Sorting/Sort';
 import NavBar from './Navbar';
 import { Button, Slider, Selector } from './Controls'; 
-import { ROUTINES, INFO } from '../assets/Sorting';
+import { ROUTINES } from '../assets/Sorting';
 import InfoCard from './InfoCard';
  
 const ControllerWrapper = styled.div`
@@ -57,7 +57,6 @@ export default class Sorting extends React.Component {
     }
 
     handleSliderChange(e){
-        console.log(e.target.value);
         this.setState({length: e.target.value});
         e.preventDefault();
 
@@ -71,9 +70,9 @@ export default class Sorting extends React.Component {
         const canvas = this.canvas.current;
         // Transform (string) length to a base 10 number
         const arraySize = parseInt(this.state.length, 10);
-        var dataArray = initializeCanvaArray(arraySize,canvas);
+        const twoRows = this.state.type === "Merge Sort" ? true : false;
+        var dataArray = initializeCanvaArray(arraySize,canvas,twoRows);
 
-        // console.log(dataArray);
         this.setState({data: dataArray});
     }
 
@@ -116,7 +115,7 @@ export default class Sorting extends React.Component {
                             <Button onClick={this.initialize}>
                                 Create a random array
                             </Button>
-                            <Slider min="15" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
+                            <Slider min="2" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
 
                             <Button onClick={this.moveElement}>{this.state.inAnimation ? "Pause" : "Move"}</Button>
                             <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
@@ -129,10 +128,6 @@ export default class Sorting extends React.Component {
                     </Info>
 
                 </Content>
-                
-                
-                
-            
             </div>  
         ); 
     }       
