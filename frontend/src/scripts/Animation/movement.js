@@ -1,5 +1,3 @@
-import { color } from '../../styles/GlobalStyles';
-
 function swapWrapper(array, element1, element2, velocity){
     var frames = element1.numFrames+1;
     var xTarget1 = element2.x[frames];
@@ -49,7 +47,7 @@ function swapWrapper(array, element1, element2, velocity){
     }
 }
 
-// When xTarget < 0, it means that we only want to move Y
+// Moves a single element to (xTarget, yTarget) with velocity 
 function moveXY(array, element, xTarget, yTarget, velocity){
     var lastFrame = element.numFrames+1;
     var lastColorIndex = element.numFrames;
@@ -60,7 +58,6 @@ function moveXY(array, element, xTarget, yTarget, velocity){
     const yStep = Math.floor(velocity * 0.1 * slope)+1;
     const xDirection = getDirection(element.x[lastFrame], xTarget);
     const yDirection = getDirection(element.y[lastFrame], yTarget);
-    var lastx = element.x[lastFrame], lasty = element.y[lastFrame];
 
     while ( element.x[lastFrame] !== xTarget || element.y[lastFrame] !== yTarget){
         for (let el of array){
@@ -98,41 +95,4 @@ function moveXY(array, element, xTarget, yTarget, velocity){
     }
 }
 
-function setColor(array, elements, color){
-    // extract id for element comparison purposes later
-    const ids = elements.map(el => el.id);
-    const lastFrame = array[0].numFrames;
-
-    // update color and x list for each element
-    for (let el of array){
-        // set color for input elements
-        if (ids.includes(el.id)){
-            el.color.push(color);
-        }else{
-            el.color.push(el.color[lastFrame]);
-        }
-
-        // concatenate last x&y coord and update numFrames
-        el.x.push(el.x[++el.numFrames])
-        el.y.push(el.y[el.numFrames])
-    }
-}
-
-function restoreColor(array, elements){
-    setColor(array, elements, color.default);
-}
-
-function shade(array, elements){
-    setColor(array, elements, color.wait);
-}
-
-function highlight(array, elements, color){
-    const FRAMES = 1;
-    
-    for (let i = 0; i < FRAMES; i++){
-        setColor(array,elements,color);
-    }
-}
-
-export {    swapWrapper as swap, moveXY as move,
-            highlight, setColor, restoreColor, shade };
+export { swapWrapper as swap, moveXY as move };

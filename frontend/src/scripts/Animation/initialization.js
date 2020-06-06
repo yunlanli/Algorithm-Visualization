@@ -94,11 +94,8 @@ function transformArrayFormat(array, width, height, color, twoRows=false){
     current.width = WIDTH - SPACE;
     current.height = getHeight(current.value,twoRows);
     current.color = [color];
-
-    let y = twoRows ? Math.floor(height/2- current.height) : height - current.height;
     current.x.push(calculateX(key,WIDTH,SPACE));
-    current.y.push(y);
-    
+    current.y.push(calculateY(height,current,twoRows));
   }
 }
 
@@ -115,4 +112,11 @@ function calculateX(index, width, space) {
   return index*width + space;
 }
 
-export { initializeCanvaArray, drawArray, getWidthSpace, calculateX };
+function calculateY(canvasHeight, element, twoRows=false) {
+  if (twoRows)
+    return Math.floor(canvasHeight/2- element.height);
+
+  return canvasHeight - element.height;
+}
+
+export { initializeCanvaArray, drawArray, getWidthSpace, calculateX, calculateY };

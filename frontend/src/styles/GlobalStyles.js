@@ -9,7 +9,6 @@ const color = {
     lightGray: '#dcdcdc',
     slider: '#9dcfff',
     selectedButton: '#f6f6f6'
-    // slider: '#fff1ed',
 }
     
 export { color };

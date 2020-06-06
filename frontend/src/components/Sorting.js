@@ -128,10 +128,6 @@ export default class Sorting extends React.Component {
                     </Info>
 
                 </Content>
-                
-                
-                
-            
             </div>  
         ); 
     }       
