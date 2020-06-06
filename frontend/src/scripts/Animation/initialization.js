@@ -5,7 +5,7 @@ import { color } from '../../styles/GlobalStyles';
 * array of random integers
 * @param size: the size of the array of random integer
 */
-export function initializeCanvaArray(size,canvas,twoRows=false){
+function initializeCanvaArray(size,canvas,twoRows=false){
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
@@ -25,7 +25,7 @@ export function initializeCanvaArray(size,canvas,twoRows=false){
 * for each element in the input array
 * @param array: the array to draw on the canvas element
 */
-export function drawArray(array,canvas,offset) {
+function drawArray(array,canvas,offset) {
   var raf;
   var count = offset;
 
@@ -46,7 +46,7 @@ export function drawArray(array,canvas,offset) {
       for (let current of array){
         // draw rectangle
         ctx.fillStyle = current.color[count-1];
-        ctx.fillRect(current.x[count],current.y,current.width,current.height);
+        ctx.fillRect(current.x[count],current.y[count],current.width,current.height);
         --current.numFrames;
       }
 
@@ -67,6 +67,7 @@ function createRandomArray(size){
     return {
       value: Math.floor(Math.random()*size*SCALEFACTOR)+1,
       x: [0],
+      y: [0],
       numFrames: 1
     }
   });
@@ -76,10 +77,7 @@ const ROWMARGIN = 5;
 function transformArrayFormat(array, width, height, color, twoRows=false){
   // width of each element based on array size and canvas width
   // Ensure that both attributes are type integer
-  const WIDTH = Math.floor(width/array.length);
-  var SPACE = Math.floor(0.1*WIDTH);
-  if (SPACE === 0)
-    SPACE = 1;
+  const [WIDTH, SPACE] = getWidthSpace(width, array.length);
   
   function getHeight(val, twoRows){
     var largest = SCALEFACTOR*array.length+1+ROWMARGIN;
@@ -96,8 +94,25 @@ function transformArrayFormat(array, width, height, color, twoRows=false){
     current.width = WIDTH - SPACE;
     current.height = getHeight(current.value,twoRows);
     current.color = [color];
-    current.x.push(key*WIDTH + SPACE);
-    current.y = twoRows ? Math.floor(height/2- current.height) : height - current.height;
+
+    let y = twoRows ? Math.floor(height/2- current.height) : height - current.height;
+    current.x.push(calculateX(key,WIDTH,SPACE));
+    current.y.push(y);
     
   }
 }
+
+function getWidthSpace(canvasWidth, numElements) {
+  var width = Math.floor(canvasWidth/numElements);
+  var space = Math.floor(0.1*width);
+  if (space === 0)
+    space = 1;
+
+    return [width, space];
+}
+
+function calculateX(index, width, space) {
+  return index*width + space;
+}
+
+export { initializeCanvaArray, drawArray, getWidthSpace, calculateX };
