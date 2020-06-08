@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
     width: 100%;
-    height: 3rem;
+    height: 1.75rem;
     /* position: fixed;
     top: 0px; */
+    font-size: 1rem;
     margin-bottom: 1rem;
     background-color: beige;
     display: flex;
@@ -26,18 +27,13 @@ const Section = (sections) => {
     });
 }
 
-class Navbar extends React.Component {
-    constructor(props){
-        super(props);
-    }
-
-    render(){
-        return(
-            <Wrapper>
+const Navbar = () => {
+    return (
+        <Wrapper>
                 <Header> Algorithm Visualization </Header>
                 {Section(sectionList)}
-            </Wrapper>
-        );
-    }
+        </Wrapper>
+    )
 }
+
 export default Navbar;

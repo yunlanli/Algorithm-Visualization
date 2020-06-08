@@ -41,7 +41,13 @@ const INFO = {
     },
 
     "Merge Sort": {
-        text: "",
+        text: `Merge Sort adopts the Divide-and-Conquer strategy. It guarantees a worst case O(NlogN) time complexity.
+        
+        There are 2 key steps in Merge Sort:
+            1. Divide the unsorted array by half, and recursively merge sort each half. For the base case of a single-item array, we directly return it.
+            2. Merging 2 sorted halves using 2 pointers in linear time.
+            
+        As shown in the animation, when we merge two sorted arrays, each comparison would sort an item. In other words, each comparison will advance one pointer forward by 1, thus ensuring an O(N) merge routine.`,
         link: "https://www.geeksforgeeks.org/merge-sort/"
     },
 
