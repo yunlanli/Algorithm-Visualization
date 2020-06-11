@@ -1,11 +1,11 @@
 const ROUTINES = 
 [
     "Insertion Sort", 
+    "Bubble Sort",
     "Quick Sort", 
     "Merge Sort", 
     "Heap Sort", 
-    "Shell Sort", 
-    "Radix Sort"
+    "Shell Sort"
 ];
 
 
@@ -19,6 +19,17 @@ const INFO = {
         Insertion Sort iterates over each element from left to right. For each element, it finds the appropriate position in the sorted array (the subarray formed by all elements before the current element) and then put it in. 
         `,
         link: "https://www.geeksforgeeks.org/insertion-sort/"
+    },
+
+    "Bubble Sort": {
+        text: `Bubble Sort sorts the biggest element in the unsorted array each time, contrary to insertion sort. However, both algorithms have a worst case O(N^2) and best case O(N) time complexity.
+        
+        There are 2 key steps in Bubble Sort:
+        1. Finding the biggest element in the unsorted array in linear time:
+        Iterate over each element(exclusing the last one) in the unsorted array, and swap the current element with its right neighbor if it's bigger. After K comparisons, it's guaranteed that the element indexed at K+1 is the biggest seen so far.
+        2. Stop when no swap occurs in one iteration:
+        Each element is no bigger than its right neighbor, suggesting that the unsorted array is actually sorted. When we are given an sorted array, we are done after one pass through the array.`,
+        link: "https://www.geeksforgeeks.org/bubble-sort/"
     },
 
     "Quick Sort": {
@@ -52,19 +63,25 @@ const INFO = {
     },
 
     "Heap Sort": {
-        text: "",
+        text: `Heap Sort is an O(NlogN) general-purpose sorting algorithm. As the name suggests, it leverages the property of a binary heap.
+
+        Given an array of elements, we can build a max heap in linear time. Then naturally, by deleteMax() N times, we are able to sort all of the elements. Each deleteMax(), specifically restructuring the heap, costs O(logN).
+        
+        Both buildHeap and deleteMax make use of a percolateDown() routine. percolateDown() takes in the root of a heap where all but the root adheres to the heap order rule. If the root is smaller than the larger of its children, then we swap them. We reapeat this process until an appropriate position is found for the root.
+        
+        In the animation, the element that's in the process of percolation is colored red. At each position, its children gets highlighted. The larger of its children remains highlighted, while the smaller one gets shaded. The 2 highlighted elements are then compared, if the max heap order is adhered to, then we have found an appropriate position for the root in the heap and the percolation is completed. Otherwise, we swap their position and recursively percolate.
+        `,
         link: "https://www.geeksforgeeks.org/heap-sort/"
     },
 
     "Shell Sort": {
-        text: "",
-        link: "https://www.geeksforgeeks.org/shellsort/"
-    },
+        text: `Shell Sort, named after its inventor Donald Sell, was one of the first sorting algorithms to break the quadratic time bound.
 
-    "Radix Sort": {
-        text: "",
-        link: "https://www.geeksforgeeks.org/radix-sort/"
-    }
+        It works by comparing elements that are distant; the distance between comparisons decreases as the algorithm runs until the last phase, in which adjacent elements are compared.
+        
+        Hibbard's increment is used in the animation, i.e the sequence 2^k - 1, ... , 3, 1. The time analyis is rather involved and it has been shown that the worst case running time is O(N^1.5).  `,
+        link: "https://www.geeksforgeeks.org/shellsort/"
+    } 
 }
 
 export { ROUTINES, INFO };

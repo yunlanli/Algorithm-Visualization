@@ -46,6 +46,11 @@ const Link = styled.a`
     }
 `;
 
+/* const createDangerousHTML = markUp => {
+    return {__html: markUp};
+}; */
+
+/* TODO: use dangerouslySetInnerHTML to display text */
 function InfoCard(props) {
     if (props.type === "none")
         return null;
@@ -54,6 +59,7 @@ function InfoCard(props) {
             <Wrapper>
                 <Heading> {props.type} </Heading>
                 <Text> {INFO[props.type].text} </Text>
+                {/* <Text dangerouslySetInnerHTML={createDangerousHTML(INFO[props.type].text)} /> */}
                 <Link href={INFO[props.type].link}>Learn More </Link>
             </Wrapper>
         )
