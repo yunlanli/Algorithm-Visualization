@@ -56,6 +56,10 @@ export default class Sorting extends React.Component {
         this.selectRoutine = this.selectRoutine.bind(this);
     }
 
+    componentDidMount() {
+        this.initialize();
+    }
+
     handleSliderChange(e){
         this.setState({length: e.target.value});
         e.preventDefault();

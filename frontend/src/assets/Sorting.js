@@ -63,7 +63,14 @@ const INFO = {
     },
 
     "Heap Sort": {
-        text: "",
+        text: `Heap Sort is an O(NlogN) general-purpose sorting algorithm. As the name suggests, it leverages the property of a binary heap.
+
+        Given an array of elements, we can build a max heap in linear time. Then naturally, by deleteMax() N times, we are able to sort all of the elements. Each deleteMax(), specifically restructuring the heap, costs O(logN).
+        
+        Both buildHeap and deleteMax make use of a percolateDown() routine. percolateDown() takes in the root of a heap where all but the root adheres to the heap order rule. If the root is smaller than the larger of its children, then we swap them. We reapeat this process until an appropriate position is found for the root.
+        
+        In the animation, the element that's in the process of percolation is colored red. At each position, its children gets highlighted. The larger of its children remains highlighted, while the smaller one gets shaded. The 2 highlighted elements are then compared, if the max heap order is adhered to, then we have found an appropriate position for the root in the heap and the percolation is completed. Otherwise, we swap their position and recursively percolate.
+        `,
         link: "https://www.geeksforgeeks.org/heap-sort/"
     },
 
