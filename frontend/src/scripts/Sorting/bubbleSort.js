@@ -1,10 +1,9 @@
 import * as Animation from "../Animation/movement"
 import * as Paint from "../Animation/coloring";
-import { drawArray } from '../Animation/initialization';
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-function bubbleSort(canvas,array,velocity) {
+function bubbleSort(array,velocity) {
     // shade all elements to start
     Paint.shade(array, array);
 
@@ -40,7 +39,6 @@ function bubbleSort(canvas,array,velocity) {
 
     // sorted, restore color and start animation
     Paint.restoreColor(array, array);
-    drawArray(array, canvas, 1);
 }
 
 export default bubbleSort;

@@ -1,6 +1,6 @@
 import * as Animation from "../Animation/movement";
 import * as Paint from "../Animation/coloring";
-import { drawArray, getWidthSpace, calculateX, calculateY } from '../Animation/initialization';
+import { getWidthSpace, calculateX, calculateY } from '../Animation/initialization';
 import { color } from '../../styles/GlobalStyles';
 
 var canvasHeight, canvasWidth, VELOCITY, WIDTH, SPACE;
@@ -15,7 +15,7 @@ function calcX(index) {
     return calculateX(index, WIDTH, SPACE);
 }
 
-function mergeSort(canvas, array, velocity) {
+function mergeSort(array, velocity, canvas) {
     canvasHeight = canvas.height; canvasWidth = canvas.width;
     [WIDTH, SPACE] = getWidthSpace(canvasWidth, array.length);
     VELOCITY = velocity;
@@ -23,7 +23,6 @@ function mergeSort(canvas, array, velocity) {
     var tmpArray = new Array(array.length).fill();
     // initially all elements are highlighted
     mergeSortHelper(array,tmpArray,0,array.length-1);
-    drawArray(array,canvas,1);
 }
 
 function mergeSortHelper(array, tmpArray, begin, end) {

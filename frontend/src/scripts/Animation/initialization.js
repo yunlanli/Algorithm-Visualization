@@ -25,8 +25,8 @@ function initializeCanvaArray(size,canvas,twoRows=false){
 * for each element in the input array
 * @param array: the array to draw on the canvas element
 */
-function drawArray(array,canvas,offset) {
-  var raf;
+function drawArray(array,canvas,offset,callback=()=>{},raf=[]) {
+  // var raf;
   var count = offset;
 
   if (canvas.getContext) {
@@ -51,7 +51,9 @@ function drawArray(array,canvas,offset) {
       }
 
       if (array[0].numFrames > 0)
-        raf = window.requestAnimationFrame(draw);
+        raf[0] = window.requestAnimationFrame(draw);
+      else
+        callback();
     }
   }
 }

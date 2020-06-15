@@ -1,10 +1,9 @@
 import * as Animation from "../Animation/movement"
 import * as Paint from "../Animation/coloring";
-import { drawArray } from '../Animation/initialization';
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-function insertionSort(canvas,array,velocity) {
+function insertionSort(array,velocity) {
     // shade all elements first
     Paint.shade(array,array);
     // calls the private helper method
@@ -12,8 +11,6 @@ function insertionSort(canvas,array,velocity) {
 
     // insertion done, restore the color of all elements in array
     Paint.restoreColor(array,array);
-
-    drawArray(array,canvas,1);
 }
 
 function insertionSortHelper(array,begin,end,velocity,use3Color=false){

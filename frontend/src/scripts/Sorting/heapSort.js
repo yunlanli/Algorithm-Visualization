@@ -1,15 +1,14 @@
 import * as Animation from "../Animation/movement"
 import * as Paint from "../Animation/coloring";
-import { drawArray } from '../Animation/initialization';
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-var canvas, array, velocity, currentSize;
+var array, velocity, currentSize;
 const leftChild = (pos) => (pos+1)*2 - 1;
 const parent = (pos) => Math.floor( (pos+1)/2 - 1 );
 
 function heapSort(...args) {
-    [canvas, array, velocity] = args;
+    [array, velocity] = args;
     currentSize = array.length;
 
     buildHeap();
@@ -17,8 +16,6 @@ function heapSort(...args) {
         deleteMax();
     }
     Paint.restoreColor(array,array);
-
-    drawArray(array, canvas, 1);
 }
 
 /*

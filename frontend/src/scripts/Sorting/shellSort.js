@@ -1,10 +1,9 @@
 import * as Animation from "../Animation/movement"
 import * as Paint from "../Animation/coloring";
-import { drawArray } from '../Animation/initialization';
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-function shellSort(canvas,array,velocity) {
+function shellSort(array,velocity) {
     Paint.shade(array,array);
 
     var hibbardIncrement = getHibbardIncrement(array.length);
@@ -36,10 +35,7 @@ function shellSort(canvas,array,velocity) {
         }
     }
 
-    console.log(array.map( (el) => el.value) );
-
     Paint.restoreColor(array,array); // sorted, restore color
-    drawArray(array, canvas, 1); // start animation
 }
 
 function getHibbardIncrement(length) {
