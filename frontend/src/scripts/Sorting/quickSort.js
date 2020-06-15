@@ -1,17 +1,14 @@
 import * as Animation from "../Animation/movement"
 import * as Paint from "../Animation/coloring";
-import { drawArray } from '../Animation/initialization';
 import { color } from '../../styles/GlobalStyles';
 import { swap } from './sortHelper';
 import { insertionSortHelper as insertionSort} from './insertionSort';
 
-function quickSort(canvas,array,velocity){
+function quickSort(array,velocity){
     // calls the helper method
     quickSortHelper(0,array.length-1);
     // all elements sorted, restore color
     Paint.restoreColor(array, array);
-
-    drawArray(array,canvas,1);
     
     // helper method that sorts the input array
     // and draws every step on the canvas
