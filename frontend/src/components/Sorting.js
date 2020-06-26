@@ -37,6 +37,9 @@ const Info = styled(Content)`
 
 const DEFAULTALGORITHM = "Insertion Sort";
 
+/* @param array: index - step No. ; value - frame No.
+ * @param target: current frame No. 
+ * @return: current step No. */
 function binarySearch(array, target) {
     var lo = 0, hi = array.length - 1, mid;
 
@@ -75,7 +78,9 @@ export default class Sorting extends React.Component {
         this.pauseToMove = this.pauseToMove.bind(this);
         this.startAnimation = this.startAnimation.bind(this);
         this.moveElement = this.moveElement.bind(this);
+        this.timeTravel = this.timeTravel.bind(this);
         this.prevStep = this.prevStep.bind(this);
+        this.nextStep = this.nextStep.bind(this);
     }
 
     componentDidMount() {
@@ -149,26 +154,31 @@ export default class Sorting extends React.Component {
         }
     }
 
-    prevStep() {
-        console.log(this.stepToFrame);
+    timeTravel(forward=false) {
         var total = this.data[0].x.length - 2, left = this.data[0].numFrames;
         var drawn = total - left;
 
-        // binary search on numFrames to find the previous Step/Current Step
-        var prevStep = binarySearch(this.stepToFrame, drawn) - 1;
-        if (prevStep < 0)
-            return;
-        console.log(drawn, this.stepToFrame[prevStep]);
+        // binary search on numFrames to find the current Step
+        var currentStep = binarySearch(this.stepToFrame, drawn);
+        var toStep = forward ? currentStep+1 : currentStep-1;
+        if (toStep < 0 || toStep > this.stepToFrame.length-1) return;
 
         // Modify the numFrame attribute of each object, re-draw Canvas
-        var frames2draw = total - this.stepToFrame[prevStep] + 1;
+        var frames2draw = total - this.stepToFrame[toStep] + 1;
         for (let el of this.data)
             el.numFrames = frames2draw;
-        console.log("Start: " + this.stepToFrame[prevStep]);
 
         // draw array
         const canvas = this.canvas.current;
-        drawArray(this.data, canvas, this.stepToFrame[prevStep], undefined, undefined, true);
+        drawArray(this.data, canvas, this.stepToFrame[toStep], undefined, undefined, true);
+    }
+
+    prevStep() {
+        this.timeTravel();
+    }
+
+    nextStep() {
+        this.timeTravel(true);
     }
 
     render(){
@@ -189,6 +199,7 @@ export default class Sorting extends React.Component {
                             <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
 
                             <Button onClick={this.prevStep}>Prev</Button>
+                            <Button onClick={this.nextStep}>Next</Button>
                         </ControllerWrapper>
 
                     </Animation>
