@@ -3,12 +3,12 @@ import * as Paint from "../Animation/coloring";
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-var array, velocity, currentSize;
+var array, velocity, currentSize, step;
 const leftChild = (pos) => (pos+1)*2 - 1;
 const parent = (pos) => Math.floor( (pos+1)/2 - 1 );
 
 function heapSort(...args) {
-    [array, velocity] = args;
+    [array, velocity, step] = args;
     currentSize = array.length;
 
     buildHeap();
@@ -34,7 +34,7 @@ function buildHeap() {
 }
 
 function deleteMax() {
-    Paint.highlight(array, [array[0]], color.selected);
+    Paint.highlight(array, [array[0]], color.selected, step);
     // currentSize - 1 is the index of the last element in the max heap
     Animation.swap(array, array[0], array[--currentSize], velocity);
     swap(array, 0, currentSize);
@@ -49,7 +49,7 @@ function deleteMax() {
 function percolateDown(root) {
     // iterative percolateDown
     var max, min, children, LC = leftChild(root);
-    Paint.highlight(array, [array[root]], color.pivot); // highlight the element to percolate down
+    Paint.highlight(array, [array[root]], color.pivot, step); // highlight the element to percolate down
 
     
     while(LC < currentSize){
@@ -57,7 +57,7 @@ function percolateDown(root) {
         max = ( children.length === 1 || array[LC].value > array[LC+1].value ) ? LC : LC + 1;
         
         // highlight root's children, then only the max of root's children
-        Paint.highlight(array, children, color.selected);
+        Paint.highlight(array, children, color.selected, step);
         if (children.length > 1 ) {
             min = max === LC ? LC + 1 : LC;
             Paint.shade(array, [array[min]]);

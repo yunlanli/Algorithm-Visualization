@@ -14,7 +14,7 @@ function bubbleSort(array,velocity,step) {
         // iterate over each unsorted array
         for ( j = array.length - 1; !stop && j > 0 ; j--) {
             // highlight the current unsorted array
-            Paint.highlight(array, array.slice(0,j+1), color.mergeLeft,step);
+            Paint.highlight(array, array.slice(0,j+1), color.mergeLeft);
 
             stop = true;
             for (let i = 0; i < j; i++) {
@@ -33,7 +33,7 @@ function bubbleSort(array,velocity,step) {
 
             // another item sorted, shade all
             Paint.shade(array, array.slice(0,j));
-            Paint.restoreColor(array,[array[j]]);
+            Paint.restoreColor(array,[array[j]],step);
         }
     }
 

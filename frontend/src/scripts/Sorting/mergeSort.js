@@ -3,7 +3,7 @@ import * as Paint from "../Animation/coloring";
 import { getWidthSpace, calculateX, calculateY } from '../Animation/initialization';
 import { color } from '../../styles/GlobalStyles';
 
-var canvasHeight, canvasWidth, VELOCITY, WIDTH, SPACE;
+var canvasHeight, canvasWidth, step, VELOCITY, WIDTH, SPACE;
 
 /* Wrapper of calculateY that gives canvasHeight as the first argument */
 function calcY(element) {
@@ -15,10 +15,10 @@ function calcX(index) {
     return calculateX(index, WIDTH, SPACE);
 }
 
-function mergeSort(array, velocity, canvas) {
+function mergeSort(array, velocity, stepTracker, canvas) {
     canvasHeight = canvas.height; canvasWidth = canvas.width;
     [WIDTH, SPACE] = getWidthSpace(canvasWidth, array.length);
-    VELOCITY = velocity;
+    [VELOCITY, step] = [velocity, stepTracker];
 
     var tmpArray = new Array(array.length).fill();
     // initially all elements are highlighted
@@ -34,9 +34,9 @@ function mergeSortHelper(array, tmpArray, begin, end) {
 
     // Partition the array into 2 equal halves and merge sort them
     const mid = Math.floor(begin + (end - begin)/2);
-    Paint.shade(array,array.slice(mid+1,end+1))
+    Paint.shade(array,array.slice(mid+1,end+1), step)
     mergeSortHelper(array, tmpArray, begin, mid);
-    Paint.restoreColor(array, array.slice(mid+1, end+1));
+    Paint.restoreColor(array, array.slice(mid+1, end+1), step);
     mergeSortHelper(array, tmpArray, mid+1, end);
 
     // Merge the 2 halves
@@ -48,12 +48,12 @@ function merge(array, tmpArray, leftBegin, leftEnd, rightEnd){
     var i = leftBegin, j = leftEnd+1, pos = leftBegin;
 
     // Color the left half with mergeLeft, the right half with mergeRight
-    Paint.highlight(array,array.slice(leftBegin,j),color.mergeLeft);
+    Paint.highlight(array,array.slice(leftBegin,j),color.mergeLeft, step);
     Paint.highlight(array,array.slice(j,rightEnd+1),color.mergeRight);
 
     // put the smaller element in the corresponding position in tmpArray after each comparison
     while ( i<=leftEnd && j<=rightEnd ){
-        Paint.highlight(array, [array[i],array[j]], color.selected);
+        Paint.highlight(array, [array[i],array[j]], color.selected, step);
         if (array[i].value < array[j].value){
             Animation.move(array, array[i], calcX(pos), calcY(array[i]), VELOCITY);
             Paint.restoreColor(array, [array[i]]);
@@ -68,7 +68,7 @@ function merge(array, tmpArray, leftBegin, leftEnd, rightEnd){
 
     // put all elements in the first halve to tmpArray
     while ( i<=leftEnd ){
-        Animation.move(array, array[i], calcX(pos),calcY(array[i]), VELOCITY);
+        Animation.move(array, array[i], calcX(pos),calcY(array[i]), VELOCITY, step);
         Paint.restoreColor(array, [array[i]]);
         tmpArray[pos++] = array[i++];
     }
@@ -76,7 +76,7 @@ function merge(array, tmpArray, leftBegin, leftEnd, rightEnd){
 
     // put all elements in the second halve to tmpArray
     while ( j<= rightEnd ){
-        Animation.move(array, array[j], calcX(pos), calcY(array[j]), VELOCITY);
+        Animation.move(array, array[j], calcX(pos), calcY(array[j]), VELOCITY, step);
         Paint.restoreColor(array, [array[j]]);
         tmpArray[pos++] = array[j++];
     }
@@ -89,7 +89,7 @@ function merge(array, tmpArray, leftBegin, leftEnd, rightEnd){
     for (let k = leftBegin; k <= rightEnd; k++)
         array[k] = tmpArray[k]; 
     for (let k = leftBegin; k <= rightEnd; k++)
-        Animation.move(array, array[k], calcX(k), array[k].y[1], VELOCITY); 
+        Animation.move(array, array[k], calcX(k), array[k].y[1], VELOCITY, step); 
 
     // shade after being sorted
     Paint.shade(array,array.slice(leftBegin, rightEnd+1));

@@ -107,6 +107,7 @@ export default class Sorting extends React.Component {
         const twoRows = this.state.type === "Merge Sort" ? true : false;
         this.data = fromScratch ? initializeCanvaArray(arraySize,canvas,twoRows) :
                                   initializeCanvaArray(arraySize,canvas,twoRows,this.data);
+        this.stepToFrame = [];
     }
     
     /* @param state: can be either -1 (temporarily paused) or 1(completed)*/

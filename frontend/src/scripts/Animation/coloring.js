@@ -20,20 +20,22 @@ function setColor(array, elements, color){
     }
 }
 
-function restoreColor(array, elements){
+function restoreColor(array, elements, stepTracker){
+    if (stepTracker) { stepTracker.push(array[0].numFrames+1); }
+
     setColor(array, elements, color.default);
 }
 
-function shade(array, elements){
+function shade(array, elements, stepTracker){
+    if (stepTracker) { stepTracker.push(array[0].numFrames+1); }
+
     setColor(array, elements, color.wait);
 }
 
 function highlight(array, elements, color, stepTracker){
     /* when stepTracker is provided, we book-keep the starting frame of
     the next step by pushing it to the stepTracker array */
-    if (stepTracker) {
-        stepTracker.push(array[0].numFrames+1);
-    }
+    if (stepTracker) { stepTracker.push(array[0].numFrames+1); }
 
     const FRAMES = 1;
     

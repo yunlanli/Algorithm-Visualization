@@ -3,7 +3,7 @@ import * as Paint from "../Animation/coloring";
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-function shellSort(array,velocity) {
+function shellSort(array,velocity,step) {
     Paint.shade(array,array);
 
     var hibbardIncrement = getHibbardIncrement(array.length);
@@ -13,11 +13,11 @@ function shellSort(array,velocity) {
         for (let i = gap; i<array.length; i++) {
             currentGroup = getGroup(array, i, gap);
             // highlight all elements in the same group as array[i]
-            Paint.highlight(array, currentGroup, color.mergeLeft);
+            Paint.highlight(array, currentGroup, color.mergeLeft, step);
             Paint.highlight(array, [array[i]], color.pivot); // highlight the element to be insertion sorted
 
             for (var j = i; j >= gap && array[j].value < array[j-gap].value; j -= gap) {
-                Paint.highlight(array,[array[j-gap]],color.selected);
+                Paint.highlight(array,[array[j-gap]],color.selected, step);
                 Animation.swap(array,array[j],array[j-gap],velocity);
                 Paint.highlight(array,[array[j-gap]],color.mergeLeft);
 
@@ -26,7 +26,7 @@ function shellSort(array,velocity) {
 
             // show the last comparison that failed
             if (j > gap) {
-                Paint.highlight(array,[array[j-gap]],color.selected);
+                Paint.highlight(array,[array[j-gap]],color.selected, step);
                 Paint.highlight(array,[array[j-gap]],color.mergeLeft);
             }
 

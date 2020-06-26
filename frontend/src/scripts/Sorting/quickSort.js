@@ -15,7 +15,7 @@ function quickSort(array,velocity,step){
     function quickSortHelper(begin,end){
         // if end - begin < 3, use insertion sort
         if( end - begin < 3){
-            insertionSort(array,begin,end,velocity);
+            insertionSort(array,begin,end,velocity,step);
         }else{
             // select the pivot using medianOfThree algorithm
             medianOfThree(begin,end);
