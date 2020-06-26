@@ -43,7 +43,7 @@ export default class Sorting extends React.Component {
         this.state = {
             length: 50,
             velocity: 20,
-            inAnimation: false,
+            inAnimation: -1, // -1: animation paused/not started, 0: in progress, 1: completed
             type: "none",
         }
         this.canvas = React.createRef();
@@ -53,6 +53,7 @@ export default class Sorting extends React.Component {
         this.handleSliderChange = this.handleSliderChange.bind(this);
         this.initialize = this.initialize.bind(this);
         this.pauseToMove = this.pauseToMove.bind(this);
+        this.startAnimation = this.startAnimation.bind(this);
         this.moveElement = this.moveElement.bind(this);
         this.setSpeed = this.setSpeed.bind(this);
         this.selectRoutine = this.selectRoutine.bind(this);
@@ -69,46 +70,58 @@ export default class Sorting extends React.Component {
         this.initialize();
     }
 
-    initialize(){
+    initialize(fromScratch=true){
         // empty previous data
-        this.data = [];
+        // this.data = [];
 
         const canvas = this.canvas.current;
         // Transform (string) length to a base 10 number
         const arraySize = parseInt(this.state.length, 10);
         const twoRows = this.state.type === "Merge Sort" ? true : false;
-        this.data = initializeCanvaArray(arraySize,canvas,twoRows);
+        this.data = fromScratch ? initializeCanvaArray(arraySize,canvas,twoRows) :
+                                  initializeCanvaArray(arraySize,canvas,twoRows,this.data);
+    }
+    
+    /*
+     * @param state: can be either -1 (temporarily paused) or 1(completed)
+     */
+    pauseToMove(state=1) {
+        // Button changes its display text from "Pause" to "Move"
+        this.setState({inAnimation: state});
     }
 
-    pauseToMove() {
-        // Button changes its display text from "Pause" to "Move"
-        this.setState({inAnimation: false});
+    startAnimation() {
+        // Animation in progress
+        this.setState({inAnimation: 0});
+
+        const canvas = this.canvas.current;
+        const velocity = parseInt(this.state.velocity,10);
+        
+        // If the animation data hasn't been computed yet, we compute it.
+        if (this.data[0].x.length === 2)
+            if (this.state.type === "none")
+                Sort[DEFAULTALGORITHM](this.data,velocity);
+            else
+                Sort[this.state.type](this.data,velocity,canvas); // merge sort needs the last parameter canvas
+        /* To-Do: add an else-if statement here to check for the case where the animation has finished, and the user wants
+        to sort the sorted array. Write a getInitialState(array) interface in initialization.js that takes in the array and
+        transform it to its initial state. */
+
+        // this.state.inAnimation is updated by drawArray using the callback this.pauseToMove
+        var nextFrame = this.data[0].x.length - this.data[0].numFrames - 1;
+        drawArray(this.data, canvas, nextFrame, this.pauseToMove, this.raf);
     }
 
     moveElement(){
         // first determine the button state
-        if (this.state.inAnimation){
+        if (this.state.inAnimation === 0){
             window.cancelAnimationFrame(this.raf[0]);
-            this.pauseToMove();
+            this.pauseToMove(-1);
+        }else if (this.state.inAnimation === -1){
+            this.startAnimation();
         }else{
-            this.setState({inAnimation: true});
-
-            const canvas = this.canvas.current;
-            const velocity = parseInt(this.state.velocity,10);
-            
-            // If the animation data hasn't been computed yet, we compute it.
-            if (this.data[0].x.length === 2)
-                if (this.state.type === "none")
-                    Sort[DEFAULTALGORITHM](this.data,velocity);
-                else
-                    Sort[this.state.type](this.data,velocity,canvas); // merge sort needs the last parameter canvas
-            /* To-Do: add an else-if statement here to check for the case where the animation has finished, and the user wants
-            to sort the sorted array. Write a getInitialState(array) interface in initialization.js that takes in the array and
-            transform it to its initial state. */
-
-            // this.state.inAnimation is updated by drawArray using the callback this.pauseToMove
-            var nextFrame = this.data[0].x.length - this.data[0].numFrames - 1;
-            drawArray(this.data, canvas, nextFrame, this.pauseToMove, this.raf);
+            this.initialize(false);
+            this.startAnimation();
         }
     }
 
@@ -139,7 +152,7 @@ export default class Sorting extends React.Component {
                             </Button>
                             <Slider min="2" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
 
-                            <Button onClick={this.moveElement}>{this.state.inAnimation ? "Pause" : "Move"}</Button>
+                            <Button onClick={this.moveElement}>{this.state.inAnimation === 0 ? "Pause" : "Move"}</Button>
                             <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
                         </ControllerWrapper>
 

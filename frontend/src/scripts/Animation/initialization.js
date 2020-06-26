@@ -4,13 +4,14 @@ import { color } from '../../styles/GlobalStyles';
 * Initializes a canvas with a visualization of a given size of
 * array of random integers
 * @param size: the size of the array of random integer
+* @param arr: the object to use for intialize the canvas 
 */
-function initializeCanvaArray(size,canvas,twoRows=false){
+function initializeCanvaArray(size,canvas,twoRows=false, arr){
     // initialize canvas
     canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 
     // prepare array for drawing
-    var array = createRandomArray(size);
+    var array = arr ? modifyExistingArray(arr) : createRandomArray(size);
     transformArrayFormat(array,canvas.width,canvas.height,color.default,twoRows);
 
     // draw array on the canvas node
@@ -71,6 +72,17 @@ function createRandomArray(size){
       x: [0],
       y: [0],
       numFrames: 1
+    }
+  });
+}
+
+function modifyExistingArray(array) {
+  return array.map((obj) => {
+    return {
+      value: obj.value,
+      x: [0],
+      y: [0],
+      numFrames: 1,
     }
   });
 }
