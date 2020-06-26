@@ -4,7 +4,7 @@ import { color } from '../../styles/GlobalStyles';
 import { swap } from './sortHelper';
 import { insertionSortHelper as insertionSort} from './insertionSort';
 
-function quickSort(array,velocity){
+function quickSort(array,velocity,step){
     // calls the helper method
     quickSortHelper(0,array.length-1);
     // all elements sorted, restore color
@@ -28,6 +28,7 @@ function quickSort(array,velocity){
             Paint.shade(array, array.slice(pivot, end+1));
             Paint.restoreColor(array, array.slice(begin, pivot));
             quickSortHelper(begin,pivot-1);
+
             Paint.shade(array, array.slice(begin, pivot));
             Paint.restoreColor(array, array.slice(pivot+1, end+1));
             quickSortHelper(pivot+1,end);
@@ -37,7 +38,7 @@ function quickSort(array,velocity){
     // high-level animation that displays a single comparison
     function compare(pos1, pos2){
         var compareResult = array[pos1].value - array[pos2].value;
-        Paint.highlight(array,[array[pos1],array[pos2]], color.selected);
+        Paint.highlight(array,[array[pos1],array[pos2]], color.selected,step);
         if (compareResult > 0){
             Animation.swap(array,array[pos1],array[pos2],velocity);
             swap(array,pos1,pos2);
@@ -66,7 +67,7 @@ function quickSort(array,velocity){
         var pivot = array[end-1].value;
 
         // highlight i,jth element
-        Paint.highlight(array, [array[i], array[j]], color.selected);
+        Paint.highlight(array, [array[i], array[j]], color.selected,step);
 
         // keep partitioning while the 2 pointers have not crossed
         while(i <= j){
@@ -75,7 +76,7 @@ function quickSort(array,velocity){
             while (array[i].value < pivot ){ 
                 if (i !== j)
                     Paint.restoreColor(array, [array[i]]);
-                Paint.highlight(array, [array[++i]], color.selected);
+                Paint.highlight(array, [array[++i]], color.selected,step);
                 
             }
 
@@ -83,7 +84,7 @@ function quickSort(array,velocity){
             while (array[j].value >= pivot ) { 
                 if (j !== i)
                     Paint.restoreColor(array,[array[j]]); 
-                Paint.highlight(array, [array[--j]], color.selected);
+                Paint.highlight(array, [array[--j]], color.selected,step);
                 
             }
 
@@ -98,7 +99,7 @@ function quickSort(array,velocity){
         Paint.restoreColor(array, [array[i],array[j]]);
         
         // move the pivot in between the 2 partitions, i.e after j, before i
-        Animation.swap(array,array[i],array[end-1],velocity);
+        Animation.swap(array,array[i],array[end-1],velocity,step);
         swap(array,i,end-1);
 
         // Restore the color of the pivot

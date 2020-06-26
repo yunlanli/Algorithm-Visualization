@@ -1,4 +1,7 @@
-function swapWrapper(array, element1, element2, velocity){
+function swapWrapper(array, element1, element2, velocity, stepTracker){
+    if (stepTracker)
+        stepTracker.push(element1.numFrames);
+    
     var frames = element1.numFrames+1;
     var xTarget1 = element2.x[frames];
     var xTarget2 = element1.x[frames];
@@ -48,7 +51,10 @@ function swapWrapper(array, element1, element2, velocity){
 }
 
 // Moves a single element to (xTarget, yTarget) with velocity 
-function moveXY(array, element, xTarget, yTarget, velocity){
+function moveXY(array, element, xTarget, yTarget, velocity, stepTracker){
+    if (stepTracker)
+        stepTracker.push(element.numFrames);
+    
     var lastFrame = element.numFrames+1;
     var lastColorIndex = element.numFrames;
 

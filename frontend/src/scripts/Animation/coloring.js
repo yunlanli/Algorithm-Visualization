@@ -28,7 +28,13 @@ function shade(array, elements){
     setColor(array, elements, color.wait);
 }
 
-function highlight(array, elements, color){
+function highlight(array, elements, color, stepTracker){
+    /* when stepTracker is provided, we book-keep the starting frame of
+    the next step by pushing it to the stepTracker array */
+    if (stepTracker) {
+        stepTracker.push(array[0].numFrames+1);
+    }
+
     const FRAMES = 1;
     
     for (let i = 0; i < FRAMES; i++){

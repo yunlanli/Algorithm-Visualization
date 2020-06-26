@@ -3,7 +3,7 @@ import * as Paint from "../Animation/coloring";
 import { swap } from './sortHelper';
 import { color } from '../../styles/GlobalStyles';
 
-function bubbleSort(array,velocity) {
+function bubbleSort(array,velocity,step) {
     // shade all elements to start
     Paint.shade(array, array);
 
@@ -14,13 +14,13 @@ function bubbleSort(array,velocity) {
         // iterate over each unsorted array
         for ( j = array.length - 1; !stop && j > 0 ; j--) {
             // highlight the current unsorted array
-            Paint.highlight(array, array.slice(0,j+1), color.mergeLeft);
+            Paint.highlight(array, array.slice(0,j+1), color.mergeLeft,step);
 
             stop = true;
             for (let i = 0; i < j; i++) {
                 // highlight the elements to compare
                     pair = array.slice(i,i+2);
-                    Paint.highlight(array, pair, color.selected);
+                    Paint.highlight(array, pair, color.selected,step);
                     
                     if (array[i].value > array[i+1].value) {
                         Animation.swap(array, ...pair,velocity);

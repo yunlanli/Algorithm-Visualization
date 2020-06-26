@@ -37,6 +37,23 @@ const Info = styled(Content)`
 
 const DEFAULTALGORITHM = "Insertion Sort";
 
+function binarySearch(array, target) {
+    var lo = 0, hi = array.length - 1, mid;
+
+    while (lo <= hi) {
+        mid = lo + Math.floor( (hi-lo)/2 );
+
+        if (target === array[mid])
+            return mid;
+        else if (target > array[mid])
+            lo = mid + 1;
+        else
+            hi = mid - 1;
+    }
+
+    return hi;
+}
+
 export default class Sorting extends React.Component {
     constructor(props){
         super(props);
@@ -48,15 +65,17 @@ export default class Sorting extends React.Component {
         }
         this.canvas = React.createRef();
         this.data = []; // objects(incl arrays) are passed by reference
+        this.stepToFrame = [];
         this.raf = []; // raf[0] is the actual raf, we use an array here so that drawArray() can modify this directly
 
         this.handleSliderChange = this.handleSliderChange.bind(this);
+        this.setSpeed = this.setSpeed.bind(this);
+        this.selectRoutine = this.selectRoutine.bind(this);
         this.initialize = this.initialize.bind(this);
         this.pauseToMove = this.pauseToMove.bind(this);
         this.startAnimation = this.startAnimation.bind(this);
         this.moveElement = this.moveElement.bind(this);
-        this.setSpeed = this.setSpeed.bind(this);
-        this.selectRoutine = this.selectRoutine.bind(this);
+        this.prevStep = this.prevStep.bind(this);
     }
 
     componentDidMount() {
@@ -70,10 +89,18 @@ export default class Sorting extends React.Component {
         this.initialize();
     }
 
-    initialize(fromScratch=true){
-        // empty previous data
-        // this.data = [];
+    setSpeed(e){
+        this.setState({velocity: e.target.value});
+        e.preventDefault();
+    }
 
+    selectRoutine(routine) {
+        // unhighlight the selected button if there is one
+        if (this.state.type !== "Algorithms")
+            this.setState({type: routine});
+    }
+
+    initialize(fromScratch=true){
         const canvas = this.canvas.current;
         // Transform (string) length to a base 10 number
         const arraySize = parseInt(this.state.length, 10);
@@ -82,9 +109,7 @@ export default class Sorting extends React.Component {
                                   initializeCanvaArray(arraySize,canvas,twoRows,this.data);
     }
     
-    /*
-     * @param state: can be either -1 (temporarily paused) or 1(completed)
-     */
+    /* @param state: can be either -1 (temporarily paused) or 1(completed)*/
     pauseToMove(state=1) {
         // Button changes its display text from "Pause" to "Move"
         this.setState({inAnimation: state});
@@ -100,12 +125,10 @@ export default class Sorting extends React.Component {
         // If the animation data hasn't been computed yet, we compute it.
         if (this.data[0].x.length === 2)
             if (this.state.type === "none")
-                Sort[DEFAULTALGORITHM](this.data,velocity);
+                Sort[DEFAULTALGORITHM](this.data,velocity, this.stepToFrame);
             else
-                Sort[this.state.type](this.data,velocity,canvas); // merge sort needs the last parameter canvas
-        /* To-Do: add an else-if statement here to check for the case where the animation has finished, and the user wants
-        to sort the sorted array. Write a getInitialState(array) interface in initialization.js that takes in the array and
-        transform it to its initial state. */
+                // merge sort needs the last parameter canvas
+                Sort[this.state.type](this.data,velocity,this.stepToFrame, canvas); 
 
         // this.state.inAnimation is updated by drawArray using the callback this.pauseToMove
         var nextFrame = this.data[0].x.length - this.data[0].numFrames - 1;
@@ -125,15 +148,26 @@ export default class Sorting extends React.Component {
         }
     }
 
-    setSpeed(e){
-        this.setState({velocity: e.target.value});
-        e.preventDefault();
-    }
+    prevStep() {
+        console.log(this.stepToFrame);
+        var total = this.data[0].x.length - 2, left = this.data[0].numFrames;
+        var drawn = total - left;
 
-    selectRoutine(routine) {
-        // unhighlight the selected button if there is one
-        if (this.state.type !== "Algorithms")
-        this.setState({type: routine});
+        // binary search on numFrames to find the previous Step/Current Step
+        var prevStep = binarySearch(this.stepToFrame, drawn) - 1;
+        if (prevStep < 0)
+            return;
+        console.log(drawn, this.stepToFrame[prevStep]);
+
+        // Modify the numFrame attribute of each object, re-draw Canvas
+        var frames2draw = total - this.stepToFrame[prevStep] + 1;
+        for (let el of this.data)
+            el.numFrames = frames2draw;
+        console.log("Start: " + this.stepToFrame[prevStep]);
+
+        // draw array
+        const canvas = this.canvas.current;
+        drawArray(this.data, canvas, this.stepToFrame[prevStep], undefined, undefined, true);
     }
 
     render(){
@@ -147,13 +181,13 @@ export default class Sorting extends React.Component {
                         <CustomCanvas width='700' height='500' ref={this.canvas}/>
 
                         <ControllerWrapper>
-                            <Button onClick={this.initialize}>
-                                Create a random array
-                            </Button>
+                            <Button onClick={this.initialize}>Generate Array</Button>
                             <Slider min="2" max="100" value={this.state.length} onChange={this.handleSliderChange} label = "Array Size" />
 
                             <Button onClick={this.moveElement}>{this.state.inAnimation === 0 ? "Pause" : "Move"}</Button>
                             <Slider min = "1" max = "800" step="60" value={this.state.velocity} onChange={this.setSpeed} label="Speed" />
+
+                            <Button onClick={this.prevStep}>Prev</Button>
                         </ControllerWrapper>
 
                     </Animation>
