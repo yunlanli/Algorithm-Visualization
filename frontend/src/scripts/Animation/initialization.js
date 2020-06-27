@@ -1,4 +1,5 @@
 import { color } from '../../styles/GlobalStyles';
+import CustomArray from './customArray';
 
 /* 
 * Initializes a canvas with a visualization of a given size of
@@ -69,8 +70,8 @@ function createRandomArray(size){
   return Array(size).fill().map(() => {
     return {
       value: Math.floor(Math.random()*size*SCALEFACTOR)+1,
-      x: [0],
-      y: [0],
+      x: new CustomArray(0,true),
+      y: new CustomArray(0,true),
       numFrames: 1
     }
   });
@@ -80,8 +81,8 @@ function modifyExistingArray(array) {
   return array.map((obj) => {
     return {
       value: obj.value,
-      x: [0],
-      y: [0],
+      x: new CustomArray(0,true),
+      y: new CustomArray(0,true),
       numFrames: 1,
     }
   });
@@ -107,7 +108,7 @@ function transformArrayFormat(array, width, height, color, twoRows=false){
     current.id = key; // unique id for each element, used for identification
     current.width = WIDTH - SPACE;
     current.height = getHeight(current.value,twoRows);
-    current.color = [color];
+    current.color = new CustomArray(color,true);
     current.x.push(calculateX(key,WIDTH,SPACE));
     current.y.push(calculateY(height,current,twoRows));
   }

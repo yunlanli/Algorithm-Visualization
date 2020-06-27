@@ -3,7 +3,6 @@ import { color } from '../../styles/GlobalStyles';
 function setColor(array, elements, color){
     // extract id for element comparison purposes later
     const ids = elements.map(el => el.id);
-    const lastFrame = array[0].numFrames;
 
     // update color and x list for each element
     for (let el of array){
@@ -11,12 +10,13 @@ function setColor(array, elements, color){
         if (ids.includes(el.id)){
             el.color.push(color);
         }else{
-            el.color.push(el.color[lastFrame]);
+            el.color.pushLast();
         }
 
         // concatenate last x&y coord and update numFrames
-        el.x.push(el.x[++el.numFrames])
-        el.y.push(el.y[el.numFrames])
+        el.x.pushLast();
+        el.y.pushLast();
+        el.numFrames++;
     }
 }
 
