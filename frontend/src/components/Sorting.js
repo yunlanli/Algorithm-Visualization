@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { initializeCanvaArray, drawArray } from '../scripts/Animation/initialization';
-import CustomArray from '../scripts/Animation/customArray';
 import Sort from '../scripts/Sorting/Sort';
 import NavBar from './Navbar';
 import { Button, Slider, Selector } from './Controls'; 
